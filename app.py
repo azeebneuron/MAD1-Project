@@ -1,6 +1,9 @@
 from flask import Flask, render_template, redirect, url_for, request, flash, session
-from models import db, User
+from models import db, User, Sponsor, Influencer, Campaign, datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
+from functools import wraps
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
@@ -70,14 +73,120 @@ def signin():
 def influencer():
     return render_template('influencer.html')
 
-@app.route('/sponsor')
-def sponsor():
+@app.route('/sponsor/profile')
+def sponsor_profile():
     return render_template('sponsor.html')
 
 @app.route('/error')
 def error():
     return render_template('error.html')
 
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            flash('Please log in to access this page.', 'warning')
+            return redirect(url_for('signin'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+def sponsor_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_role' not in session or session['user_role'] != 'sponsor':
+            flash('Access denied. Sponsors only.', 'danger')
+            return redirect(url_for('home'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+@app.route('/campaigns')
+@login_required
+@sponsor_required
+def campaigns_list():
+    campaigns = Campaign.query.filter_by(sponsor_id=session['user_id']).all()
+    return render_template('campaigns_list.html', campaigns=campaigns)
+
+@app.route('/campaigns/create', methods=['GET', 'POST'])
+@login_required
+@sponsor_required
+def create_campaign():
+    if request.method == 'POST':
+        new_campaign = Campaign(
+            sponsor_id=session['user_id'],
+            title=request.form['title'],
+            description=request.form['description'],
+            budget=float(request.form['budget']) if request.form['budget'] else None,
+            category=request.form['category'],
+            status=request.form['status'],
+            start_date=datetime.strptime(request.form['start_date'], '%Y-%m-%d') if request.form['start_date'] else None,
+            end_date=datetime.strptime(request.form['end_date'], '%Y-%m-%d') if request.form['end_date'] else None
+        )
+        db.session.add(new_campaign)
+        db.session.commit()
+        flash('Campaign created successfully!', 'success')
+
+        return redirect(url_for('campaigns_list'))
+    return render_template('create_campaign.html')
+
+@app.route('/campaigns/<int:campaign_id>/update', methods=['GET', 'POST'])
+@login_required
+@sponsor_required
+def update_campaign(campaign_id):
+    campaign = Campaign.query.get_or_404(campaign_id)
+    if campaign.sponsor_id != session['user_id']:
+        flash('You do not have permission to edit this campaign.', 'danger')
+        return redirect(url_for('campaigns_list'))
+    
+    if request.method == 'POST':
+        campaign.title = request.form['title']
+        campaign.description = request.form['description']
+        campaign.budget = float(request.form['budget']) if request.form['budget'] else None
+        campaign.category = request.form['category']
+        campaign.status = request.form['status']
+        campaign.start_date = datetime.strptime(request.form['start_date'], '%Y-%m-%d') if request.form['start_date'] else None
+        campaign.end_date = datetime.strptime(request.form['end_date'], '%Y-%m-%d') if request.form['end_date'] else None
+        db.session.commit()
+        flash('Campaign updated successfully!', 'success')
+        return redirect(url_for('campaigns_list'))
+    return render_template('update_campaign.html', campaign=campaign)
+
+@app.route('/campaigns/<int:campaign_id>/delete', methods=['POST'])
+@login_required
+@sponsor_required
+def delete_campaign(campaign_id):
+    campaign = Campaign.query.get_or_404(campaign_id)
+    if campaign.sponsor_id != session['user_id']:
+        flash('You do not have permission to delete this campaign.', 'danger')
+        return redirect(url_for('campaigns_list'))
+    
+    db.session.delete(campaign)
+    db.session.commit()
+    flash('Campaign deleted successfully!', 'success')
+    return redirect(url_for('campaigns_list'))
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash('You have been logged out.', 'info')
+    return redirect(url_for('home'))
+
+@app.route('/sponsor')
+@login_required
+@sponsor_required
+def sponsor():
+    campaigns = Campaign.query.filter_by(sponsor_id=session['user_id']).all()
+    return render_template('sponsor.html', campaigns=campaigns)
+
+
+def parse_date(date_string):
+    if date_string:
+        try:
+            return datetime.strptime(date_string, '%Y-%m-%d')
+        except ValueError:
+            flash('Invalid date format. Please use YYYY-MM-DD.', 'danger')
+            return None
+    return None
 
 if __name__ == '__main__':
     app.run(debug=True)
