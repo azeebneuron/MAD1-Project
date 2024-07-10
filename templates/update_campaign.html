@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Campaign</title>
+</head>
+<body>
+    <h1>Update Campaign</h1>
+    <form action="{{ url_for('update_campaign', campaign_id=campaign.id) }}" method="POST">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" value="{{ campaign.title }}" required><br><br>
+
+        <label for="description">Description:</label>
+        <textarea id="description" name="description">{{ campaign.description }}</textarea><br><br>
+
+        <label for="budget">Budget:</label>
+        <input type="number" id="budget" name="budget" step="0.01" value="{{ campaign.budget }}"><br><br>
+
+        <label for="category">Category:</label>
+        <input type="text" id="category" name="category" value="{{ campaign.category }}"><br><br>
+
+        <label for="status">Status:</label>
+        <select id="status" name="status">
+            <option value="active" {% if campaign.status == 'active' %}selected{% endif %}>Active</option>
+            <option value="completed" {% if campaign.status == 'completed' %}selected{% endif %}>Completed</option>
+            <option value="flagged" {% if campaign.status == 'flagged' %}selected{% endif %}>Flagged</option>
+        </select><br><br>
+
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date" name="start_date" value="{{ campaign.start_date.strftime('%Y-%m-%d') if campaign.start_date else '' }}"><br><br>
+
+        <label for="end_date">End Date:</label>
+        <input type="date" id="end_date" name="end_date" value="{{ campaign.end_date.strftime('%Y-%m-%d') if campaign.end_date else '' }}"><br><br>
+
+        <input type="submit" value="Update Campaign">
+    </form>
+</body>
+</html>

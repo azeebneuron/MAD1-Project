@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Sign Up{% endblock %}
+{% block content %}
+<div class="container">
+    <h2>Sign Up</h2>
+    <form action="/signup" method="post">
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <input type="password" name="repeat-password" placeholder="Repeat Password" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <select name="user-type" required>
+            <option value="" disabled selected>Select User Type</option>
+            <option value="influencer">Influencer</option>
+            <option value="sponsor">Sponsor</option>
+        </select>
+        <button type="submit">Sign Up</button>
+    </form>
+    <a href="/signin">Sign In</a>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Sign In{% endblock %}
+{% block content %}
+<div class="container">
+    <h2>Sign In</h2>
+    <form action="/signin" method="post">
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button type="submit">Sign In</button>
+    </form>
+    <a href="/signup">Sign Up</a>
+</div>
+{% endblock %}

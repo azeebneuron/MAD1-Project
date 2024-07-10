@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Campaign</title>
+</head>
+<body>
+    <h1>Create New Campaign</h1>
+    <form action="{{ url_for('create_campaign') }}" method="POST">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required><br><br>
+
+        <label for="description">Description:</label>
+        <textarea id="description" name="description"></textarea><br><br>
+
+        <label for="budget">Budget:</label>
+        <input type="number" id="budget" name="budget" step="0.01"><br><br>
+
+        <label for="category">Category:</label>
+        <input type="text" id="category" name="category"><br><br>
+
+        <label for="status">Status:</label>
+        <select id="status" name="status">
+            <option value="active">Active</option>
+            <option value="completed">Completed</option>
+            <option value="flagged">Flagged</option>
+        </select><br><br>
+
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date" name="start_date"><br><br>
+
+        <label for="end_date">End Date:</label>
+        <input type="date" id="end_date" name="end_date"><br><br>
+
+        <input type="submit" value="Create Campaign">
+    </form>
+</body>
+</html>
