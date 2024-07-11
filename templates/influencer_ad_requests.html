@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Influencer Ad Requests</title>
+</head>
+<body>
+    <h1>Your Ad Requests</h1>
+    <p>Influencer: {{ influencer.user.username }} ({{ influencer.category }} - {{ influencer.niche }})</p>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+            {% for category, message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    <table>
+        <thead>
+            <tr>
+                <th>Campaign</th>
+                <th>Sponsor</th>
+                <th>Status</th>
+                <th>Details</th>
+                <th>Negotiation Terms</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ad_request in ad_requests %}
+            <tr>
+                <td>{{ ad_request.campaign.title }}</td>
+                <td>{{ ad_request.campaign.sponsor.company_name }}</td>
+                <td>{{ ad_request.status }}</td>
+                <td>{{ ad_request.details }}</td>
+                <td>{{ ad_request.negotiation_terms or 'N/A' }}</td>
+                <td>
+                    {% if ad_request.status == 'pending' %}
+                        <form action="{{ url_for('influencer_ad_request_action', id=ad_request.id) }}" method="POST">
+                            <input type="hidden" name="action" value="accept">
+                            <input type="submit" value="Accept">
+                        </form>
+                        <form action="{{ url_for('influencer_ad_request_action', id=ad_request.id) }}" method="POST">
+                            <input type="hidden" name="action" value="reject">
+                            <input type="submit" value="Reject">
+                        </form>
+                        <form action="{{ url_for('influencer_ad_request_action', id=ad_request.id) }}" method="POST">
+                            <input type="hidden" name="action" value="negotiate">
+                            <textarea name="new_terms" placeholder="Propose new terms" required></textarea>
+                            <input type="submit" value="Negotiate">
+                        </form>
+                    {% elif ad_request.status == 'negotiated' %}
+                        <p>Waiting for sponsor response</p>
+                    {% else %}
+                        <p>No actions available</p>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

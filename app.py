@@ -1,8 +1,11 @@
 from flask import Flask, render_template, redirect, url_for, request, flash, session
-from models import db, User, Sponsor, Influencer, Campaign, datetime
+from models import db, User, Sponsor, Influencer, Campaign, datetime, AdRequest
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from functools import wraps
+from flask_login import login_required, current_user
+from flask_login import LoginManager
+
 
 
 app = Flask(__name__)
@@ -20,27 +23,32 @@ def home():
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    try:
-        if request.method == 'POST':
-            username = request.form['username']
-            password = generate_password_hash(request.form['password'], method='sha256')
-            email = request.form['email']
-            role = request.form['user-type']
-            
-            existing_user = User.query.filter_by(email=email).first()
-            if existing_user:
-                flash('Email is already registered', 'danger')
-                return redirect(url_for('signup'))
+    if request.method == 'POST':
+        username = request.form['username']
+        password = generate_password_hash(request.form['password'], method='sha256')
+        email = request.form['email']
+        role = request.form['user-type']
+        
+        existing_user = User.query.filter_by(email=email).first()
+        if existing_user:
+            flash('Email is already registered', 'danger')
+            return redirect(url_for('signup'))
 
-            new_user = User(username=username, password=password, email=email, role=role)
-            db.session.add(new_user)
-            db.session.commit()
+        new_user = User(username=username, password=password, email=email, role=role)
+        db.session.add(new_user)
+        db.session.flush()  # This will assign an id to new_user without committing the transaction
 
-            flash('Account created successfully!', 'success')
-            return redirect(url_for('signin'))
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return redirect(url_for('error'))
+        if role == 'influencer':
+            new_influencer = Influencer(user_id=new_user.id)
+            db.session.add(new_influencer)
+        elif role == 'sponsor':
+            new_sponsor = Sponsor(user_id=new_user.id)
+            db.session.add(new_sponsor)
+
+        db.session.commit()
+
+        flash('Account created successfully!', 'success')
+        return redirect(url_for('signin'))
 
     return render_template('signup.html')
 
@@ -187,6 +195,135 @@ def parse_date(date_string):
             flash('Invalid date format. Please use YYYY-MM-DD.', 'danger')
             return None
     return None
+
+# Ad requests
+
+@app.route('/ad_requests', methods=['GET'])
+def list_ad_requests():
+    ad_requests = AdRequest.query.all()
+    return render_template('ad_requests_list.html', ad_requests=ad_requests)
+
+@app.route('/ad_requests/create', methods=['GET', 'POST'])
+def create_ad_request():
+    if request.method == 'POST':
+        campaign_id = request.form['campaign_id']
+        influencer_id = request.form['influencer_id']
+        status = request.form['status']
+        details = request.form['details']
+        
+        new_ad_request = AdRequest(
+            campaign_id=campaign_id,
+            influencer_id=influencer_id,
+            status=status,
+            details=details
+        )
+        
+        db.session.add(new_ad_request)
+        db.session.commit()
+        
+        flash('Ad request created successfully', 'success')
+        return redirect(url_for('list_ad_requests'))
+    
+    campaigns = Campaign.query.all()
+    influencers = Influencer.query.all()
+    return render_template('create_ad_request.html', campaigns=campaigns, influencers=influencers)
+
+@app.route('/ad_requests/edit/<int:id>', methods=['GET', 'POST'])
+def edit_ad_request(id):
+    ad_request = AdRequest.query.get_or_404(id)
+    
+    if request.method == 'POST':
+        ad_request.influencer_id = request.form['influencer_id']
+        ad_request.status = request.form['status']
+        ad_request.details = request.form['details']
+        ad_request.updated_at = datetime.utcnow()
+        
+        db.session.commit()
+        
+        flash('Ad request updated successfully', 'success')
+        return redirect(url_for('list_ad_requests'))
+    
+    influencers = Influencer.query.all()
+    return render_template('edit_ad_request.html', ad_request=ad_request, influencers=influencers)
+
+@app.route('/ad_requests/delete/<int:id>', methods=['POST'])
+def delete_ad_request(id):
+    ad_request = AdRequest.query.get_or_404(id)
+    db.session.delete(ad_request)
+    db.session.commit()
+    
+    flash('Ad request deleted successfully', 'success')
+    return redirect(url_for('list_ad_requests'))
+
+# Influencers ad requests
+
+def influencer_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_role' not in session:
+            flash('Please log in to access this page.', 'warning')
+            return redirect(url_for('signin'))
+        if session['user_role'] != 'influencer':
+            flash('Access denied. Influencers only.', 'danger')
+            return redirect(url_for('home'))
+        
+        influencer = Influencer.query.filter_by(user_id=session['user_id']).first()
+        if not influencer:
+            flash('Your account is not properly set up as an influencer. Please contact support.', 'danger')
+            return redirect(url_for('home'))
+        
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+@app.route('/influencer/ad_requests', methods=['GET'])
+@login_required
+@influencer_required
+def influencer_ad_requests():
+    influencer = Influencer.query.filter_by(user_id=session['user_id']).first()
+    if not influencer:
+        flash('You are not registered as an influencer.', 'error')
+        return redirect(url_for('home'))
+    
+    ad_requests = AdRequest.query.filter_by(influencer_id=influencer.id).all()
+    return render_template('influencer_ad_requests.html', ad_requests=ad_requests, influencer=influencer)
+
+@app.route('/influencer/ad_request/<int:id>/action', methods=['POST'])
+@login_required
+@influencer_required
+def influencer_ad_request_action(id):
+    influencer = Influencer.query.filter_by(user_id=session['user_id']).first()
+    if not influencer:
+        flash('You are not registered as an influencer.', 'error')
+        return redirect(url_for('home'))
+    
+    ad_request = AdRequest.query.get_or_404(id)
+    if ad_request.influencer_id != influencer.id:
+        flash('You are not authorized to perform this action.', 'error')
+        return redirect(url_for('influencer_ad_requests'))
+    
+    action = request.form.get('action')
+    if action == 'accept':
+        ad_request.status = 'accepted'
+        flash('Ad request accepted successfully.', 'success')
+    elif action == 'reject':
+        ad_request.status = 'rejected'
+        flash('Ad request rejected successfully.', 'success')
+    elif action == 'negotiate':
+        new_terms = request.form.get('new_terms')
+        if new_terms:
+            ad_request.status = 'negotiated'
+            ad_request.negotiation_terms = new_terms
+            ad_request.communication_log += f"\n[{datetime.utcnow()}] Influencer negotiated: {new_terms}"
+            flash('Negotiation submitted successfully.', 'success')
+        else:
+            flash('Please provide terms for negotiation.', 'error')
+    
+    ad_request.updated_at = datetime.utcnow()
+    db.session.commit()
+    return redirect(url_for('influencer_ad_requests'))
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

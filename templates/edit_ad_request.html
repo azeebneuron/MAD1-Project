@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Ad Request</title>
+</head>
+<body>
+    <h1>Edit Ad Request</h1>
+    <form action="{{ url_for('edit_ad_request', id=ad_request.id) }}" method="POST">
+        <label for="campaign_id">Campaign:</label>
+        <input type="text" value="{{ ad_request.campaign.name }}" readonly>
+        <br>
+        <label for="influencer_id">Influencer:</label>
+        <select name="influencer_id" required>
+            {% for influencer in influencers %}
+            <option value="{{ influencer.id }}" {% if influencer.id == ad_request.influencer_id %}selected{% endif %}>{{ influencer.name }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <label for="status">Status:</label>
+        <select name="status" required>
+            <option value="pending" {% if ad_request.status == 'pending' %}selected{% endif %}>Pending</option>
+            <option value="accepted" {% if ad_request.status == 'accepted' %}selected{% endif %}>Accepted</option>
+            <option value="rejected" {% if ad_request.status == 'rejected' %}selected{% endif %}>Rejected</option>
+            <option value="negotiated" {% if ad_request.status == 'negotiated' %}selected{% endif %}>Negotiated</option>
+        </select>
+        <br>
+        <label for="details">Details:</label>
+        <textarea name="details" rows="4" cols="50">{{ ad_request.details }}</textarea>
+        <br>
+        <input type="submit" value="Update Ad Request">
+    </form>
+    <a href="{{ url_for('list_ad_requests') }}">Back to Ad Requests List</a>
+</body>
+</html>
