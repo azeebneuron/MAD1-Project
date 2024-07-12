@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Influencer Search Results</title>
+</head>
+<body>
+    <h1>Influencer Search Results</h1>
+    {% if influencers %}
+        <ul>
+        {% for influencer in influencers %}
+            <li>
+                <h2>{{ influencer.user.username }}</h2>
+                <p>Category: {{ influencer.category }}</p>
+                <p>Niche: {{ influencer.niche }}</p>
+                <p>Reach: {{ influencer.reach }}</p>
+                <p>Bio: {{ influencer.bio }}</p>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No influencers found matching your criteria.</p>
+    {% endif %}
+    <a href="{{ url_for('search_influencers') }}">Back to Search</a>
+</body>
+</html>

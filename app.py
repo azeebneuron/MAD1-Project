@@ -1,3 +1,4 @@
+from sqlalchemy import or_
 from flask import Flask, render_template, redirect, url_for, request, flash, session
 from models import db, User, Sponsor, Influencer, Campaign, datetime, AdRequest
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -230,7 +231,7 @@ def create_ad_request():
 
 @app.route('/ad_requests/edit/<int:id>', methods=['GET', 'POST'])
 def edit_ad_request(id):
-    ad_request = AdRequest.query.get_or_404(id)
+    ad_request = AdRequest.query.get_or_404(id) 
     
     if request.method == 'POST':
         ad_request.influencer_id = request.form['influencer_id']
@@ -323,7 +324,64 @@ def influencer_ad_request_action(id):
     db.session.commit()
     return redirect(url_for('influencer_ad_requests'))
 
+# Search Functions for Influencer and Sponsor
 
+@app.route('/search_influencers', methods=['GET', 'POST'])
+@login_required
+@sponsor_required
+def search_influencers():
+    if request.method == 'POST':
+        search_query = request.form.get('search_query', '')
+        category = request.form.get('category', '')
+        min_reach = request.form.get('min_reach', 0, type=int)
+
+        influencers = Influencer.query.join(User).filter(
+            or_(
+                User.username.ilike(f'%{search_query}%'),
+                Influencer.category.ilike(f'%{search_query}%'),
+                Influencer.niche.ilike(f'%{search_query}%')
+            )
+        )
+
+        if category:
+            influencers = influencers.filter(Influencer.category == category)
+        
+        if min_reach:
+            influencers = influencers.filter(Influencer.reach >= min_reach)
+
+        influencers = influencers.all()
+        return render_template('search_influencers_results.html', influencers=influencers)
+
+    return render_template('search_influencers.html')
+
+@app.route('/search_campaigns', methods=['GET', 'POST'])
+@login_required
+@influencer_required
+def search_campaigns():
+    if request.method == 'POST':
+        search_query = request.form.get('search_query', '')
+        category = request.form.get('category', '')
+        min_budget = request.form.get('min_budget', 0, type=float)
+
+        campaigns = Campaign.query.filter(
+            Campaign.status == 'active',
+            or_(
+                Campaign.title.ilike(f'%{search_query}%'),
+                Campaign.description.ilike(f'%{search_query}%'),
+                Campaign.category.ilike(f'%{search_query}%')
+            )
+        )
+
+        if category:
+            campaigns = campaigns.filter(Campaign.category == category)
+        
+        if min_budget:
+            campaigns = campaigns.filter(Campaign.budget >= min_budget)
+
+        campaigns = campaigns.all()
+        return render_template('search_campaigns_results.html', campaigns=campaigns)
+
+    return render_template('search_campaigns.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
