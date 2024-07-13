@@ -105,26 +105,27 @@ def create_app():
         
         return render_template('signin.html')
 
-    def login_required(f):
-        @wraps(f)
-        def decorated_function(*args, **kwargs):
-            if 'user_id' not in session:
-                flash('Please log in to access this page.', 'warning')
-                return redirect(url_for('signin'))
-            return f(*args, **kwargs)
-        return decorated_function
+    # def login_required(f):
+    #     @wraps(f)
+    #     def decorated_function(*args, **kwargs):
+    #         if 'user_id' not in session:
+    #             flash('Please log in to access this page.', 'warning')
+    #             return redirect(url_for('signin'))
+    #         return f(*args, **kwargs)
+    #     return decorated_function
+
 
     def influencer_required(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
-            if 'user_role' not in session:
+            if not current_user.is_authenticated:
                 flash('Please log in to access this page.', 'warning')
                 return redirect(url_for('signin'))
-            if session['user_role'] != 'influencer':
+            if current_user.role != 'influencer':
                 flash('Access denied. Influencers only.', 'danger')
                 return redirect(url_for('home'))
             
-            influencer = Influencer.query.filter_by(user_id=session['user_id']).first()
+            influencer = Influencer.query.filter_by(user_id=current_user.id).first()
             if not influencer:
                 flash('Your account is not properly set up as an influencer. Please contact support.', 'danger')
                 return redirect(url_for('home'))
@@ -135,12 +136,14 @@ def create_app():
     def sponsor_required(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
-            if 'user_role' not in session or session['user_role'] != 'sponsor':
+            if not current_user.is_authenticated:
+                flash('Please log in to access this page.', 'warning')
+                return redirect(url_for('signin'))
+            if current_user.role != 'sponsor':
                 flash('Access denied. Sponsors only.', 'danger')
                 return redirect(url_for('home'))
             return f(*args, **kwargs)
         return decorated_function
-
 
     def admin_required(f):
         @wraps(f)
@@ -152,13 +155,13 @@ def create_app():
         return decorated_function
 
     @app.route('/influencer')
-    @login_required
+    # @login_required
     @influencer_required
     def influencer():
         return render_template('influencer.html')
 
     @app.route('/sponsor')
-    @login_required
+    # @login_required
     @sponsor_required
     def sponsor():
         campaigns = Campaign.query.filter_by(sponsor_id=session['user_id']).all()
@@ -172,14 +175,15 @@ def create_app():
 
 
     @app.route('/campaigns')
-    @login_required
+    # @login_required
     @sponsor_required
     def campaigns_list():
         campaigns = Campaign.query.filter_by(sponsor_id=session['user_id']).all()
         return render_template('campaigns_list.html', campaigns=campaigns)
 
     @app.route('/campaigns/create', methods=['GET', 'POST'])
-    @login_required
+
+
     @sponsor_required
     def create_campaign():
         if request.method == 'POST':
@@ -201,7 +205,7 @@ def create_app():
         return render_template('create_campaign.html')
 
     @app.route('/campaigns/<int:campaign_id>/update', methods=['GET', 'POST'])
-    @login_required
+    # @login_required
     @sponsor_required
     def update_campaign(campaign_id):
         campaign = Campaign.query.get_or_404(campaign_id)
@@ -223,7 +227,7 @@ def create_app():
         return render_template('update_campaign.html', campaign=campaign)
 
     @app.route('/campaigns/<int:campaign_id>/delete', methods=['POST'])
-    @login_required
+    # @login_required
     @sponsor_required
     def delete_campaign(campaign_id):
         campaign = Campaign.query.get_or_404(campaign_id)
@@ -238,11 +242,13 @@ def create_app():
 
     @app.route('/logout')
     def logout():
-        session.clear()
-        flash('You have been logged out.', 'info')
+        if current_user.is_authenticated:
+            logout_user()
+            session.clear()
+            flash('You have been logged out successfully.', 'info')
+        else:
+            flash('You are not logged in.', 'info')
         return redirect(url_for('home'))
-
-
 
     def parse_date(date_string):
         if date_string:
@@ -317,7 +323,7 @@ def create_app():
 
 
     @app.route('/influencer/ad_requests', methods=['GET'])
-    @login_required
+    # @login_required
     @influencer_required
     def influencer_ad_requests():
         influencer = Influencer.query.filter_by(user_id=session['user_id']).first()
@@ -329,7 +335,7 @@ def create_app():
         return render_template('influencer_ad_requests.html', ad_requests=ad_requests, influencer=influencer)
 
     @app.route('/influencer/ad_request/<int:id>/action', methods=['POST'])
-    @login_required
+    # @login_required
     @influencer_required
     def influencer_ad_request_action(id):
         influencer = Influencer.query.filter_by(user_id=session['user_id']).first()
@@ -366,7 +372,7 @@ def create_app():
     # Search Functions for Influencer and Sponsor
 
     @app.route('/search_influencers', methods=['GET', 'POST'])
-    @login_required
+    # @login_required
     @sponsor_required
     def search_influencers():
         if request.method == 'POST':
@@ -394,7 +400,7 @@ def create_app():
         return render_template('search_influencers.html')
 
     @app.route('/search_campaigns', methods=['GET', 'POST'])
-    @login_required
+    # @login_required
     @influencer_required
     def search_campaigns():
         if request.method == 'POST':
@@ -424,7 +430,7 @@ def create_app():
 
     # Influener Profile
     @app.route('/influencer/profile', methods=['GET', 'POST'])
-    @login_required
+    # @login_required
     @influencer_required
     def influencer_profile():
         influencer = Influencer.query.filter_by(user_id=session['user_id']).first()
@@ -447,7 +453,7 @@ def create_app():
     # Sponsor Profile
 
     @app.route('/sponsor/profile', methods=['GET', 'POST'])
-    @login_required
+    # @login_required
     @sponsor_required
     def sponsor_profile():
         sponsor = Sponsor.query.filter_by(user_id=session['user_id']).first()
@@ -472,7 +478,7 @@ def create_app():
     # Admin routes
 
     @app.route('/admin/dashboard')
-    @login_required
+    # @login_required
     @admin_required
     def admin_dashboard():
         # Fetch statistics
@@ -502,21 +508,21 @@ def create_app():
                             flagged_influencers=flagged_influencers)
     
     @app.route('/admin/users')
-    @login_required
+    # @login_required
     @admin_required
     def admin_users():
         users = User.query.all()
         return render_template('admin_users.html', users=users)
 
     @app.route('/admin/users/<int:user_id>')
-    @login_required
+    # @login_required
     @admin_required
     def admin_user_detail(user_id):
         user = User.query.get_or_404(user_id)
         return render_template('admin_user_detail.html', user=user)
 
     @app.route('/admin/users/<int:user_id>/edit', methods=['GET', 'POST'])
-    @login_required
+    # @login_required
     @admin_required
     def admin_user_edit(user_id):
         user = User.query.get_or_404(user_id)
@@ -532,7 +538,7 @@ def create_app():
         return render_template('admin_user_edit.html', user=user)
 
     @app.route('/admin/users/<int:user_id>/delete', methods=['POST'])
-    @login_required
+    # @login_required
     @admin_required
     def admin_user_delete(user_id):
         user = User.query.get_or_404(user_id)
@@ -542,21 +548,21 @@ def create_app():
         return redirect(url_for('admin_users'))
 
     @app.route('/admin/campaigns')
-    @login_required
+    # @login_required
     @admin_required
     def admin_campaigns():
         campaigns = Campaign.query.all()
         return render_template('admin_campaigns.html', campaigns=campaigns)
 
     @app.route('/admin/campaigns/<int:campaign_id>')
-    @login_required
+    # @login_required
     @admin_required
     def admin_campaign_detail(campaign_id):
         campaign = Campaign.query.get_or_404(campaign_id)
         return render_template('admin_campaign_detail.html', campaign=campaign)
 
     @app.route('/admin/campaigns/<int:campaign_id>/edit', methods=['GET', 'POST'])
-    @login_required
+    # @login_required
     @admin_required
     def admin_campaign_edit(campaign_id):
         campaign = Campaign.query.get_or_404(campaign_id)
@@ -571,7 +577,7 @@ def create_app():
         return render_template('admin_campaign_edit.html', campaign=campaign)
 
     @app.route('/admin/campaigns/<int:campaign_id>/delete', methods=['POST'])
-    @login_required
+    # @login_required
     @admin_required
     def admin_campaign_delete(campaign_id):
         campaign = Campaign.query.get_or_404(campaign_id)
@@ -581,21 +587,21 @@ def create_app():
         return redirect(url_for('admin_campaigns'))
 
     @app.route('/admin/ad_requests')
-    @login_required
+    # @login_required
     @admin_required
     def admin_ad_requests():
         ad_requests = AdRequest.query.all()
         return render_template('admin_ad_requests.html', ad_requests=ad_requests)
 
     @app.route('/admin/ad_requests/<int:ad_request_id>')
-    @login_required
+    # @login_required
     @admin_required
     def admin_ad_request_detail(ad_request_id):
         ad_request = AdRequest.query.get_or_404(ad_request_id)
         return render_template('admin_ad_request_detail.html', ad_request=ad_request)
 
     @app.route('/admin/ad_requests/<int:ad_request_id>/edit', methods=['GET', 'POST'])
-    @login_required
+    # @login_required
     @admin_required
     def admin_ad_request_edit(ad_request_id):
         ad_request = AdRequest.query.get_or_404(ad_request_id)
@@ -608,7 +614,7 @@ def create_app():
         return render_template('admin_ad_request_edit.html', ad_request=ad_request)
 
     @app.route('/admin/ad_requests/<int:ad_request_id>/delete', methods=['POST'])
-    @login_required
+    # @login_required
     @admin_required
     def admin_ad_request_delete(ad_request_id):
         ad_request = AdRequest.query.get_or_404(ad_request_id)

@@ -29,5 +29,10 @@
         <li><a href="{{ url_for('admin_campaigns') }}">Manage Campaigns</a></li>
         <li><a href="{{ url_for('admin_ad_requests') }}">Manage Ad Requests</a></li>
     </ul>
+
+    <form action="{{ url_for('logout') }}" method="get">
+        <button type="submit">Logout</button>
+    </form>
+    
 </body>
 </html>
