@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Campaigns</title>
+</head>
+<body>
+    <h1>Manage Campaigns</h1>
+    <a href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Sponsor</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        {% for campaign in campaigns %}
+        <tr>
+            <td>{{ campaign.id }}</td>
+            <td>{{ campaign.title }}</td>
+            <td>{{ campaign.sponsor.username }}</td>
+            <td>{{ campaign.status }}</td>
+            <td>
+                <a href="{{ url_for('admin_campaign_detail', campaign_id=campaign.id) }}">View</a>
+                <a href="{{ url_for('admin_campaign_edit', campaign_id=campaign.id) }}">Edit</a>
+                <form action="{{ url_for('admin_campaign_delete', campaign_id=campaign.id) }}" method="post" style="display:inline;">
+                    <input type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this campaign?');">
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

@@ -1,14 +1,17 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from extensions import db
+from flask_login import UserMixin
 
-db = SQLAlchemy()
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     role = db.Column(db.String(50), nullable=False)  # admin, sponsor, influencer
+    is_active = db.Column(db.Boolean, default=True)
+
     # profile_picture_url = db.Column(db.String(255))
     # cover_picture_url = db.Column(db.String(255))
     # created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -24,6 +27,9 @@ class Sponsor(db.Model):
     company_name = db.Column(db.String(120))
     industry = db.Column(db.String(120))
     budget = db.Column(db.Float)
+    description = db.Column(db.Text)
+    is_flagged = db.Column(db.Boolean, default=False)
+
     # add bio
     # profile_picture_url = db.Column(db.String(255))
     # cover_picture_url = db.Column(db.String(255))
@@ -41,7 +47,7 @@ class Influencer(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     category = db.Column(db.String(120))
     niche = db.Column(db.String(120))
-    
+    is_flagged = db.Column(db.Boolean, default=False)
     reach = db.Column(db.Integer)
     bio = db.Column(db.Text)
     # profile_picture_url = db.Column(db.String(255))
@@ -65,6 +71,9 @@ class Campaign(db.Model):
     status = db.Column(db.String(50), nullable=False)  # active, completed, flagged
     start_date = db.Column(db.DateTime)
     end_date = db.Column(db.DateTime)
+    is_public = db.Column(db.Boolean, default=True)
+
+
     # goals = db.Column(db.Text)
     # created_at = db.Column(db.DateTime, default=datetime.utcnow)
     # updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Ad Requests</title>
+</head>
+<body>
+    <h1>Manage Ad Requests</h1>
+    <a href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Campaign</th>
+            <th>Influencer</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        {% for ad_request in ad_requests %}
+        <tr>
+            <td>{{ ad_request.id }}</td>
+            <td>{{ ad_request.campaign.title }}</td>
+            <td>{{ ad_request.influencer.user.username }}</td>
+            <td>{{ ad_request.status }}</td>
+            <td>
+                <a href="{{ url_for('admin_ad_request_detail', ad_request_id=ad_request.id) }}">View</a>
+                <a href="{{ url_for('admin_ad_request_edit', ad_request_id=ad_request.id) }}">Edit</a>
+                <form action="{{ url_for('admin_ad_request_delete', ad_request_id=ad_request.id) }}" method="post" style="display:inline;">
+                    <input type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this ad request?');">
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sponsor Profile</title>
+</head>
+<body>
+    <h1>Sponsor Profile</h1>
+    
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('sponsor_profile') }}" method="post">
+        <label for="company_name">Company Name:</label>
+        <input type="text" id="company_name" name="company_name" value="{{ sponsor.company_name or '' }}"><br><br>
+
+        <label for="industry">Industry:</label>
+        <input type="text" id="industry" name="industry" value="{{ sponsor.industry or '' }}"><br><br>
+
+        <label for="budget">Budget:</label>
+        <input type="number" id="budget" name="budget" step="0.01" value="{{ sponsor.budget or '' }}"><br><br>
+
+        <label for="description">Company Description:</label><br>
+        <textarea id="description" name="description" rows="4" cols="50">{{ sponsor.description or '' }}</textarea><br><br>
+
+        <input type="submit" value="Update Profile">
+    </form>
+
+    <a href="{{ url_for('sponsor') }}">Back to Sponsor Dashboard</a>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit User</title>
+</head>
+<body>
+    <h1>Edit User</h1>
+    <a href="{{ url_for('admin_users') }}">Back to Users</a>
+    <form action="{{ url_for('admin_user_edit', user_id=user.id) }}" method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" value="{{ user.username }}" required><br><br>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="{{ user.email }}" required><br><br>
+        
+        <label for="role">Role:</label>
+        <select id="role" name="role">
+            <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
+            <option value="sponsor" {% if user.role == 'sponsor' %}selected{% endif %}>Sponsor</option>
+            <option value="influencer" {% if user.role == 'influencer' %}selected{% endif %}>Influencer</option>
+        </select><br><br>
+        
+        <label for="password">New Password (leave blank to keep current):</label>
+        <input type="password" id="password" name="password"><br><br>
+        
+        <input type="submit" value="Update User">
+    </form>
+</body>
+</html>

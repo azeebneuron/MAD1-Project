@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+    
+    <h2>Statistics</h2>
+    <ul>
+        <li>Total Users: {{ total_users }}</li>
+        <li>Active Users: {{ active_users }}</li>
+        <li>Total Campaigns: {{ total_campaigns }}</li>
+        <li>Public Campaigns: {{ public_campaigns }}</li>
+        <li>Private Campaigns: {{ private_campaigns }}</li>
+        <li>Total Ad Requests: {{ total_ad_requests }}</li>
+        <li>Pending Ad Requests: {{ pending_ad_requests }}</li>
+        <li>Accepted Ad Requests: {{ accepted_ad_requests }}</li>
+        <li>Rejected Ad Requests: {{ rejected_ad_requests }}</li>
+        <li>Flagged Sponsors: {{ flagged_sponsors }}</li>
+        <li>Flagged Influencers: {{ flagged_influencers }}</li>
+    </ul>
+
+    <h2>Quick Links</h2>
+    <ul>
+        <li><a href="{{ url_for('admin_users') }}">Manage Users</a></li>
+        <li><a href="{{ url_for('admin_campaigns') }}">Manage Campaigns</a></li>
+        <li><a href="{{ url_for('admin_ad_requests') }}">Manage Ad Requests</a></li>
+    </ul>
+</body>
+</html>

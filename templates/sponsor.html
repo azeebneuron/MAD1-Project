@@ -1,7 +1,36 @@
-{% extends "base.html" %}
-{% block title %}Sponsor Dashboard{% endblock %}
-{% block content %}
-<h1>Welcome, {{ session['username'] }}!</h1>
-<!-- Other content for the Sponsor Dashboard -->
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sponsor Dashboard</title>
+</head>
+<body>
+    <h1>Welcome, {{ session['username'] }}!</h1>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('sponsor_profile') }}">Edit Company Profile</a></li>
+            <li><a href="{{ url_for('search_influencers') }}">Search Influencers</a></li>
+            <li><a href="{{ url_for('campaigns_list') }}">View Campaigns</a></li>
+            <li><a href="{{ url_for('create_campaign') }}">Create New Campaign</a></li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+    </nav>
 
+    <h2>Your Campaigns</h2>
+    {% if campaigns %}
+        <ul>
+        {% for campaign in campaigns %}
+            <li>
+                <h3>{{ campaign.title }}</h3>
+                <p>Status: {{ campaign.status }}</p>
+                <p>Budget: ${{ campaign.budget }}</p>
+                <a href="{{ url_for('update_campaign', campaign_id=campaign.id) }}">Edit</a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>You haven't created any campaigns yet.</p>
+    {% endif %}
+</body>
+</html>

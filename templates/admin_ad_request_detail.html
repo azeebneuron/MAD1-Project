@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ad Request Detail</title>
+</head>
+<body>
+    <h1>Ad Request Detail</h1>
+    <a href="{{ url_for('admin_ad_requests') }}">Back to Ad Requests</a>
+    <h2>Ad Request #{{ ad_request.id }}</h2>
+    <p>Campaign: {{ ad_request.campaign.title }}</p>
+    <p>Influencer: {{ ad_request.influencer.user.username }}</p>
+    <p>Status: {{ ad_request.status }}</p>
+    <p>Details: {{ ad_request.details }}</p>
+    <a href="{{ url_for('admin_ad_request_edit', ad_request_id=ad_request.id) }}">Edit Ad Request</a>
+</body>
+</html>

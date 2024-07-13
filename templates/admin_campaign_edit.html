@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Campaign</title>
+</head>
+<body>
+    <h1>Edit Campaign</h1>
+    <a href="{{ url_for('admin_campaigns') }}">Back to Campaigns</a>
+    <form action="{{ url_for('admin_campaign_edit', campaign_id=campaign.id) }}" method="post">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" value="{{ campaign.title }}" required><br><br>
+        
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required>{{ campaign.description }}</textarea><br><br>
+        
+        <label for="budget">Budget:</label>
+        <input type="number" id="budget" name="budget" value="{{ campaign.budget }}" step="0.01" required><br><br>
+        
+        <label for="status">Status:</label>
+        <select id="status" name="status">
+            <option value="active" {% if campaign.status == 'active' %}selected{% endif %}>Active</option>
+            <option value="inactive" {% if campaign.status == 'inactive' %}selected{% endif %}>Inactive</option>
+            <option value="completed" {% if campaign.status == 'completed' %}selected{% endif %}>Completed</option>
+        </select><br><br>
+        
+        <input type="submit" value="Update Campaign">
+    </form>
+</body>
+</html>

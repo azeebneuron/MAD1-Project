@@ -1,6 +1,19 @@
-{% extends "base.html" %}
-{% block title %}Influencer Dashboard{% endblock %}
-{% block content %}
-<h1>Welcome, {{ session['username'] }}!</h1>
-<!-- Other content for the Influencer Dashboard -->
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Influencer Dashboard</title>
+</head>
+<body>
+    <h1>Welcome, {{ session['username'] }}!</h1>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('influencer_profile') }}">Edit Profile</a></li>
+            <li><a href="{{ url_for('search_campaigns') }}">Search Campaigns</a></li>
+            <li><a href="{{ url_for('influencer_ad_requests') }}">View Ad Requests</a></li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+    </nav>
+</body>
+</html>

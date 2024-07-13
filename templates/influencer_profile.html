@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Influencer Profile</title>
+</head>
+<body>
+    <h1>Influencer Profile</h1>
+    
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('influencer_profile') }}" method="post">
+        <label for="category">Category:</label>
+        <input type="text" id="category" name="category" value="{{ influencer.category or '' }}"><br><br>
+
+        <label for="niche">Niche:</label>
+        <input type="text" id="niche" name="niche" value="{{ influencer.niche or '' }}"><br><br>
+
+        <label for="reach">Reach:</label>
+        <input type="number" id="reach" name="reach" value="{{ influencer.reach or '' }}"><br><br>
+
+        <label for="bio">Bio:</label><br>
+        <textarea id="bio" name="bio" rows="4" cols="50">{{ influencer.bio or '' }}</textarea><br><br>
+
+        <input type="submit" value="Update Profile">
+    </form>
+
+    <a href="{{ url_for('influencer') }}">Back to Influencer Dashboard</a>
+</body>
+</html>
