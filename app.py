@@ -27,6 +27,8 @@ from models import User, Sponsor, Influencer, Campaign, AdRequest
 
 def create_app():
     app = Flask(__name__)
+    print(f"Template folder path: {app.template_folder}")
+
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
     app.config['SECRET_KEY'] = 'your_secret_key'
 
@@ -41,11 +43,13 @@ def create_app():
     with app.app_context():
         db.create_all()
 
-    # Your route definitions go here
     @app.route('/')
     def home():
-        return render_template('index.html')
-
+        try:
+            return render_template('index.html')
+        except Exception as e:
+            print(f"Error rendering template: {str(e)}")
+            return f"Error: {str(e)}", 500
 
 
     @app.route('/signup', methods=['GET', 'POST'])
@@ -103,6 +107,11 @@ def create_app():
                 flash('Invalid credentials', 'danger')
         
         return render_template('signin.html')
+        
+    
+    @app.route('/test')
+    def test():
+        return "This is a test route"
 
 
     # def login_required(f):
@@ -626,7 +635,11 @@ def create_app():
     init_commands(app)
     return app
 
-app = create_app()
+# app = create_app()
+
+# if __name__ == '__main__':
+#     app.run(debug=True)
 
 if __name__ == '__main__':
+    app = create_app()
     app.run(debug=True)

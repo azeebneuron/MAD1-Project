@@ -130,7 +130,6 @@ class Conversation(db.Model):
     def __repr__(self):
         return f'<Conversation {self.id}>'
 
-
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     conversation_id = db.Column(db.Integer, db.ForeignKey('conversation.id'), nullable=False)
