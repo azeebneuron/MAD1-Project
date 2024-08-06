@@ -93,6 +93,8 @@ def create_app():
             
             if user and check_password_hash(user.password, password):
                 login_user(user)  # Use Flask-Login to log in the user
+                session['username'] = user.username  # Store username in session
+                session['user_id'] = user.id  # It's often useful to store the user ID as well
                 
                 if user.role == 'admin':
                     return redirect(url_for('admin_dashboard'))
@@ -173,9 +175,10 @@ def create_app():
     @login_required
     @sponsor_required
     def sponsor():
+        username = session.get('username', 'Guest')
         campaigns = Campaign.query.filter_by(sponsor_id=current_user.id).all()
-        return render_template('sponsor.html', campaigns=campaigns)
-
+        print("Username:", username)
+        return render_template('sponsor.html', username=username, campaigns=campaigns)
 
     @app.route('/error')
     def error():
@@ -232,22 +235,22 @@ def create_app():
             campaign.end_date = datetime.strptime(request.form['end_date'], '%Y-%m-%d') if request.form['end_date'] else None
             db.session.commit()
             flash('Campaign updated successfully!', 'success')
-            return redirect(url_for('campaigns_list'))
+            return redirect(url_for('sponsor'))
         return render_template('update_campaign.html', campaign=campaign)
 
-    @app.route('/campaigns/<int:campaign_id>/delete', methods=['POST'])
+    @app.route('/campaigns/<int:campaign_id>/delete', methods=['GET', 'POST'])
     @login_required
     @sponsor_required
     def delete_campaign(campaign_id):
         campaign = Campaign.query.get_or_404(campaign_id)
         if campaign.sponsor_id != current_user.id:
             flash('You do not have permission to delete this campaign.', 'danger')
-            return redirect(url_for('campaigns_list'))
+            return redirect(url_for('sponsor'))
         
         db.session.delete(campaign)
         db.session.commit()
         flash('Campaign deleted successfully!', 'success')
-        return redirect(url_for('campaigns_list'))
+        return redirect(url_for('sponsor'))
 
     @app.route('/logout')
     def logout():
