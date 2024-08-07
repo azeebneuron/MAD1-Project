@@ -167,9 +167,16 @@ def create_app():
 
     @app.route('/influencer')
     @login_required
-    @influencer_required
     def influencer():
-        return render_template('influencer.html')
+        if current_user.role != 'influencer':
+            flash('Access denied. This page is for influencers only.', 'danger')
+            return redirect(url_for('home'))
+
+        # Fetch active campaigns
+        active_campaigns = Campaign.query.filter_by(status='active', is_public=True).order_by(Campaign.start_date.desc()).limit(6).all()
+        
+        return render_template('influencer.html', current_user=current_user, active_campaigns=active_campaigns)
+
 
     @app.route('/sponsor')
     @login_required
@@ -194,6 +201,20 @@ def create_app():
         return render_template('sponsor.html', campaigns=campaigns)
 
     @app.route('/campaigns/create', methods=['GET', 'POST'])
+
+    @app.route('/campaign/<int:campaign_id>')
+    @login_required
+    def campaign_details(campaign_id):
+        campaign = Campaign.query.get_or_404(campaign_id)
+        return render_template('campaign_details.html', campaign=campaign)
+    
+    #TODO: Add the apply_campaign route
+    @app.route('/apply_campaign/<int:campaign_id>')
+    @login_required
+    def apply_campaign(campaign_id):
+        # Add your logic here for applying to a campaign
+        flash('Your application has been submitted!', 'success')
+        return redirect(url_for('campaign_details', campaign_id=campaign_id))
 
 
     @sponsor_required
@@ -642,11 +663,6 @@ def create_app():
 
     init_commands(app)
     return app
-
-# app = create_app()
-
-# if __name__ == '__main__':
-#     app.run(debug=True)
 
 if __name__ == '__main__':
     app = create_app()

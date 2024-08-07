@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campaign Search Results - InfluConnect</title>
+    <title>Campaign Details - InfluConnect</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <style>
-        /* Include the same base styles as in the influencer dashboard */
         :root {
             --primary-color: #1a1a1a;
             --secondary-color: #ff6600;
@@ -116,41 +115,35 @@
             background-color: var(--hover-color);
         }
 
-        /* ... (include all the styles from the previous examples) ... */
-
-        .campaign-list {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .campaign-item {
+        .campaign-details {
             background-color: var(--card-bg-color);
             border-radius: 10px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            padding: 2rem;
         }
 
-        .campaign-item h2 {
+        .campaign-title {
+            font-size: 1.5rem;
             color: var(--secondary-color);
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
         }
 
-        .campaign-item p {
-            margin-bottom: 0.5rem;
+        .campaign-info {
+            margin-bottom: 1rem;
         }
 
-        .no-results {
-            background-color: var(--card-bg-color);
-            border-radius: 10px;
-            padding: 1.5rem;
-            text-align: center;
+        .campaign-info strong {
+            color: var(--secondary-color);
+        }
+
+        .campaign-description {
+            margin-top: 1rem;
+            line-height: 1.6;
         }
     </style>
 </head>
 <body>
     <div class="dashboard">
         <aside class="sidebar">
-            <!-- Include the same sidebar as in the influencer dashboard -->
             <div class="logo">
                 <h1>InfluConnect</h1>
             </div>
@@ -182,32 +175,31 @@
 
         <main class="main-content">
             <header class="header">
-                <h1 class="welcome-text">Campaign Search Results</h1>
-                <a href="{{ url_for('search_campaigns') }}" class="btn">
-                    <i class="fas fa-search"></i> New Search
+                <h1 class="welcome-text">Campaign Details</h1>
+                <a href="{{ url_for('influencer') }}" class="btn">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
                 </a>
             </header>
 
-            {% if campaigns %}
-                <ul class="campaign-list">
-                {% for campaign in campaigns %}
-                    <li class="campaign-item">
-                        <h2>{{ campaign.title }}</h2>
-                        <p><strong>Category:</strong> {{ campaign.category }}</p>
-                        <p><strong>Budget:</strong> ${{ campaign.budget }}</p>
-                        <p><strong>Description:</strong> {{ campaign.description }}</p>
-                        <p><strong>Start Date:</strong> {{ campaign.start_date }}</p>
-                        <p><strong>End Date:</strong> {{ campaign.end_date }}</p>
-                        <!-- <p><strong>Campaign ID:</strong> {{ campaign.id }}</p> -->
-                        <!-- <a href="{{ url_for('campaign_details', campaign_id=campaign.id) }}" class="btn">View Details</a> -->
-                    </li>
-                {% endfor %}
-                </ul>
-            {% else %}
-                <div class="no-results">
-                    <p>No campaigns found matching your criteria.</p>
+            <section class="campaign-details">
+                <h2 class="campaign-title">{{ campaign.title }}</h2>
+                <p class="campaign-info"><strong>Company:</strong> {{ campaign.sponsor.company_name }}</p>
+                <p class="campaign-info"><strong>Category:</strong> {{ campaign.category }}</p>
+                <p class="campaign-info"><strong>Budget:</strong> ${{ campaign.budget }}</p>
+                <p class="campaign-info"><strong>Status:</strong> {{ campaign.status.capitalize() }}</p>
+                <p class="campaign-info"><strong>Start Date:</strong> {{ campaign.start_date.strftime('%Y-%m-%d') if campaign.start_date else 'N/A' }}</p>
+                <p class="campaign-info"><strong>End Date:</strong> {{ campaign.end_date.strftime('%Y-%m-
+%d') if campaign.end_date else 'N/A' }}</p>
+                <div class="campaign-description">
+                    <strong>Description:</strong>
+                    <p>{{ campaign.description }}</p>
                 </div>
-            {% endif %}
+                {% if current_user.role == 'influencer' %}
+                <a href="{{ url_for('apply_campaign', campaign_id=campaign.id) }}" class="btn" style="margin-top: 1rem;">
+                    Apply for Campaign
+                </a>
+                {% endif %}
+            </section>
         </main>
     </div>
 </body>

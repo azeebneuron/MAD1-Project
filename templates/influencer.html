@@ -4,16 +4,306 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Influencer Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        /* Add your existing styles here */
+        :root {
+            --primary-color: #1a1a1a;
+            --secondary-color: #ff6600;
+            --text-color: #f4f4f4;
+            --bg-color: #121212;
+            --card-bg-color: #2a2a2a;
+            --hover-color: #ff8533;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+        }
+
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--primary-color);
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo h1 {
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+        }
+
+        .nav-menu {
+            list-style-type: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        .nav-link i {
+            margin-right: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            margin-left: 250px;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .welcome-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .btn {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: var(--hover-color);
+        }
+
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background-color: var(--card-bg-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-description {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+        
+        .campaigns-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .campaign-card {
+            background-color: #f4f4f4;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .campaign-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .campaign-company {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        .campaign-details {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        .campaign-dates {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 1rem;
+        }
+
+        .campaigns-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .campaign-card {
+            background-color: var(--card-bg-color);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .campaign-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .campaign-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin-bottom: 0.75rem;
+        }
+
+        .campaign-company {
+            font-size: 1rem;
+            color: #bbb;
+            margin-bottom: 1rem;
+        }
+
+        .campaign-details {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .campaign-dates {
+            font-size: 0.85rem;
+            color: #999;
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid #444;
+        }
+
+        .btn-view-details {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .btn-view-details:hover {
+            background-color: var(--hover-color);
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome, {{ current_user.username }}!</h1>
-    <nav>
-        <ul>
-            <li><a href="{{ url_for('influencer_profile') }}">Edit Profile</a></li>
-            <li><a href="{{ url_for('search_campaigns') }}">Search Campaigns</a></li>
-            <li><a href="{{ url_for('influencer_ad_requests') }}">View Ad Requests</a></li>
-            <li><a href="{{ url_for('logout') }}">Logout</a></li>
-        </ul>
-    </nav>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="logo">
+                <h1>InfluConnect</h1>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="{{ url_for('influencer_profile') }}" class="nav-link">
+                            <i class="fas fa-user-edit"></i> Edit Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('search_campaigns') }}" class="nav-link">
+                            <i class="fas fa-search"></i> Search Campaigns
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('influencer_ad_requests') }}" class="nav-link">
+                            <i class="fas fa-ad"></i> View Ad Requests
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('logout') }}" class="nav-link">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <h1 class="welcome-text">Welcome, {{ current_user.username }}!</h1>
+            </header>
+
+            <section class="active-campaigns">
+                <h2>Active Campaigns</h2>
+                <div class="campaigns-grid">
+                    {% for campaign in active_campaigns %}
+                    <div class="campaign-card">
+                        <h3 class="campaign-title">{{ campaign.title }}</h3>
+                        <p class="campaign-company">{{ campaign.sponsor.company_name }}</p>
+                        <p class="campaign-details"><strong>Category:</strong> {{ campaign.category }}</p>
+                        <p class="campaign-details"><strong>Budget:</strong> ${{ campaign.budget }}</p>
+                        <p class="campaign-details"><strong>Description:</strong> {{ campaign.description[:100] }}{% if campaign.description|length > 100 %}...{% endif %}</p>
+                        <p class="campaign-dates">
+                            <strong>Start:</strong> {{ campaign.start_date.strftime('%Y-%m-%d') if campaign.start_date else 'N/A' }} |
+                            <strong>End:</strong> {{ campaign.end_date.strftime('%Y-%m-%d') if campaign.end_date else 'N/A' }}
+                        </p>
+                        <a href="{{ url_for('campaign_details', campaign_id=campaign.id) }}" class="btn-view-details">View Details</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+        </main>
+    </div>
 </body>
 </html>
