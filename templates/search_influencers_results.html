@@ -3,25 +3,296 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Influencer Search Results</title>
+    <title>InfluConnect - Influencer Search Results</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        /* Include the same CSS from sponsor.html here */
+        :root {
+            --primary-color: #1a1a1a;
+            --secondary-color: #ff6600;
+            --text-color: #f4f4f4;
+            --bg-color: #121212;
+            --card-bg-color: #2a2a2a;
+            --hover-color: #ff8533;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+        }
+
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--primary-color);
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo h1 {
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+        }
+
+        .nav-menu {
+            list-style-type: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        .nav-link i {
+            margin-right: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            margin-left: 250px;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .welcome-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .btn {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: var(--hover-color);
+        }
+
+        .section-title {
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            color: var(--secondary-color);
+        }
+
+        .campaigns-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;  /* This adds space between the title and the grid */
+        }
+
+        .campaign-card {
+            background-color: var(--card-bg-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .campaign-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(255, 102, 0, 0.1);
+        }
+
+        .campaign-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+        }
+
+        .campaign-info {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .campaign-actions {
+            margin-top: 1rem;
+        }
+
+        .no-campaigns {
+            text-align: center;
+            padding: 2rem;
+            background-color: var(--card-bg-color);
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+        /* ... */
+
+        .influencer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .influencer-card {
+            background-color: var(--card-bg-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .influencer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(255, 102, 0, 0.1);
+        }
+
+        .influencer-name {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+        }
+
+        .influencer-info {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            background-color: var(--card-bg-color);
+            border-radius: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Influencer Search Results</h1>
-    {% if influencers %}
-        <ul>
-        {% for influencer in influencers %}
-            <li>
-                <h2>{{ influencer.user.username }}</h2>
-                <p>Category: {{ influencer.category }}</p>
-                <p>Niche: {{ influencer.niche }}</p>
-                <p>Reach: {{ influencer.reach }}</p>
-                <p>Bio: {{ influencer.bio }}</p>
-            </li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>No influencers found matching your criteria.</p>
-    {% endif %}
-    <a href="{{ url_for('search_influencers') }}">Back to Search</a>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <!-- Include the same sidebar from sponsor.html -->
+            <div class="logo">
+                <h1>InfluConnect</h1>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="{{ url_for('sponsor_profile') }}" class="nav-link">
+                            <i class="fas fa-user-edit"></i> Edit Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('search_influencers') }}" class="nav-link">
+                            <i class="fas fa-search"></i> Find Influencers
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('campaigns_list') }}" class="nav-link active">
+                            <i class="fas fa-bullhorn"></i> Campaigns
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('create_ad_request') }}" class="nav-link">
+                            <i class="fas fa-ad"></i> Ad Requests
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('logout') }}" class="nav-link">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <!-- ... -->
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <h1 class="welcome-text">Influencer Search Results</h1>
+                <a href="{{ url_for('search_influencers') }}" class="btn">
+                    <i class="fas fa-search"></i> New Search
+                </a>
+            </header>
+
+            <section>
+                <h2 class="section-title">Found Influencers</h2>
+                {% if influencers %}
+                    <div class="influencer-grid">
+                    {% for influencer in influencers %}
+                        <div class="influencer-card">
+                            <h3 class="influencer-name">{{ influencer.user.username }}</h3>
+                            <p class="influencer-info">Category: {{ influencer.category }}</p>
+                            <p class="influencer-info">Niche: {{ influencer.niche }}</p>
+                            <p class="influencer-info">Reach: {{ influencer.reach }}</p>
+                            <p class="influencer-info">Bio: {{ influencer.bio|truncate(100) }}</p>
+                            <div class="campaign-actions">
+                                <a href="#" class="btn btn-edit">
+                                    <i class="fas fa-user-plus"></i> Contact
+                                </a>
+                                <a href="#" class="btn btn-delete">
+                                    <i class="fas fa-info-circle"></i> More Info
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="no-results">
+                        <p>No influencers found matching your criteria.</p>
+                    </div>
+                {% endif %}
+            </section>
+        </main>
+    </div>
 </body>
 </html>

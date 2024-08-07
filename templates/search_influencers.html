@@ -3,22 +3,301 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Influencers</title>
+    <title>InfluConnect - Search Influencers</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        /* Include the same CSS from sponsor.html here */
+        :root {
+            --primary-color: #1a1a1a;
+            --secondary-color: #ff6600;
+            --text-color: #f4f4f4;
+            --bg-color: #121212;
+            --card-bg-color: #2a2a2a;
+            --hover-color: #ff8533;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+        }
+
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--primary-color);
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo h1 {
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+        }
+
+        .nav-menu {
+            list-style-type: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        .nav-link i {
+            margin-right: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            margin-left: 250px;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .welcome-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .btn {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: var(--hover-color);
+        }
+
+        .section-title {
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            color: var(--secondary-color);
+        }
+
+        .campaigns-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;  /* This adds space between the title and the grid */
+        }
+
+        .campaign-card {
+            background-color: var(--card-bg-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .campaign-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(255, 102, 0, 0.1);
+        }
+
+        .campaign-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+        }
+
+        .campaign-info {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .campaign-actions {
+            margin-top: 1rem;
+        }
+
+        .no-campaigns {
+            text-align: center;
+            padding: 2rem;
+            background-color: var(--card-bg-color);
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+        /* ... */
+
+        .search-form {
+            background-color: var(--card-bg-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--primary-color);
+            border-radius: 5px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+
+        .search-btn {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background-color: var(--hover-color);
+        }
+    </style>
 </head>
 <body>
-    <h1>Search Influencers</h1>
-    <form action="{{ url_for('search_influencers') }}" method="post">
-        <input type="text" name="search_query" placeholder="Search by name, category, or niche">
-        <select name="category">
-            <option value="">All Categories</option>
-            <option value="Fashion">Fashion</option>
-            <option value="Technology">Technology</option>
-            <option value="Lifestyle">Lifestyle</option>
-            <option value="Gaming">Gaming</option>
-            <option value="Food">Food</option>
-        </select>
-        <input type="number" name="min_reach" placeholder="Minimum reach">
-        <button type="submit">Search</button>
-    </form>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <!-- Include the same sidebar from sponsor.html -->
+            <div class="logo">
+                <h1>InfluConnect</h1>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="{{ url_for('sponsor_profile') }}" class="nav-link">
+                            <i class="fas fa-user-edit"></i> Edit Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('search_influencers') }}" class="nav-link active">
+                            <i class="fas fa-search"></i> Find Influencers
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('campaigns_list') }}" class="nav-link">
+                            <i class="fas fa-bullhorn"></i> Campaigns
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('create_ad_request') }}" class="nav-link">
+                            <i class="fas fa-ad"></i> Ad Requests
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('logout') }}" class="nav-link">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <!-- ... -->
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <h1 class="welcome-text">Search Influencers</h1>
+            </header>
+
+            <section>
+                <h2 class="section-title">Find Your Perfect Match</h2>
+                <form action="{{ url_for('search_influencers') }}" method="post" class="search-form">
+                    <div class="form-group">
+                        <label for="search_query">Search</label>
+                        <input type="text" id="search_query" name="search_query" class="form-control" placeholder="Search by name, category, or niche">
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select name="category" id="category" class="form-control">
+                            <option value="">All Categories</option>
+                            <option value="Fashion">Fashion</option>
+                            <option value="Technology">Technology</option>
+                            <option value="Lifestyle">Lifestyle</option>
+                            <option value="Gaming">Gaming</option>
+                            <option value="Food">Food</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="min_reach">Minimum Reach</label>
+                        <input type="number" id="min_reach" name="min_reach" class="form-control" placeholder="Minimum reach">
+                    </div>
+                    <button type="submit" class="search-btn">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </form>
+            </section>
+        </main>
+    </div>
 </body>
 </html>

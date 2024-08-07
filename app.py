@@ -191,7 +191,7 @@ def create_app():
     @sponsor_required
     def campaigns_list():
         campaigns = Campaign.query.filter_by(sponsor_id=current_user.id).all()
-        return render_template('campaigns_list.html', campaigns=campaigns)
+        return render_template('sponsor.html', campaigns=campaigns)
 
     @app.route('/campaigns/create', methods=['GET', 'POST'])
 
@@ -275,33 +275,38 @@ def create_app():
 
     @app.route('/ad_requests', methods=['GET'])
     def list_ad_requests():
-        ad_requests = AdRequest.query.all()
+        ad_requests = AdRequest.query.filter(AdRequest.campaign.has(sponsor_id=current_user.id)).all()
         return render_template('ad_requests_list.html', ad_requests=ad_requests)
 
     @app.route('/ad_requests/create', methods=['GET', 'POST'])
     def create_ad_request():
         if request.method == 'POST':
-            campaign_id = request.form['campaign_id']
-            influencer_id = request.form['influencer_id']
-            status = request.form['status']
-            details = request.form['details']
-            
+            campaign_id = request.form.get('campaign_id')
+            influencer_username = request.form.get('influencer_username')
+            status = request.form.get('status')
+            details = request.form.get('details')
+
+            # Find the influencer by username
+            influencer = Influencer.query.join(User).filter(User.username == influencer_username).first()
+
+            if not influencer:
+                flash('Influencer not found. Please check the username and try again.', 'error')
+                return redirect(url_for('create_ad_request'))
+
             new_ad_request = AdRequest(
                 campaign_id=campaign_id,
-                influencer_id=influencer_id,
+                influencer_id=influencer.id,
                 status=status,
                 details=details
             )
-            
             db.session.add(new_ad_request)
             db.session.commit()
-            
-            flash('Ad request created successfully', 'success')
+
+            flash('Ad request created successfully!', 'success')
             return redirect(url_for('list_ad_requests'))
-        
-        campaigns = Campaign.query.all()
-        influencers = Influencer.query.all()
-        return render_template('create_ad_request.html', campaigns=campaigns, influencers=influencers)
+
+        campaigns = Campaign.query.filter_by(sponsor_id=current_user.id).all()
+        return render_template('create_ad_request.html', campaigns=campaigns)
 
     @app.route('/ad_requests/edit/<int:id>', methods=['GET', 'POST'])
     def edit_ad_request(id):
