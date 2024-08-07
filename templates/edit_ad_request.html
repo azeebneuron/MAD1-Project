@@ -3,34 +3,253 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Ad Request</title>
+    <title>InfluConnect - Edit Ad Request</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a1a1a;
+            --secondary-color: #ff6600;
+            --text-color: #f4f4f4;
+            --bg-color: #121212;
+            --card-bg-color: #2a2a2a;
+            --hover-color: #ff8533;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+        }
+
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--primary-color);
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo h1 {
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+        }
+
+        .nav-menu {
+            list-style-type: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        .nav-link i {
+            margin-right: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            margin-left: 250px;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .welcome-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .btn {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: var(--hover-color);
+        }
+
+        .form-container {
+            background-color: var(--card-bg-color);
+            border-radius: 10px;
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--primary-color);
+            border-radius: 5px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn-submit {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--hover-color);
+        }
+    </style>
 </head>
 <body>
-    <h1>Edit Ad Request</h1>
-    <form action="{{ url_for('edit_ad_request', id=ad_request.id) }}" method="POST">
-        <label for="campaign_id">Campaign:</label>
-        <input type="text" value="{{ ad_request.campaign.name }}" readonly>
-        <br>
-        <label for="influencer_id">Influencer:</label>
-        <select name="influencer_id" required>
-            {% for influencer in influencers %}
-            <option value="{{ influencer.id }}" {% if influencer.id == ad_request.influencer_id %}selected{% endif %}>{{ influencer.name }}</option>
-            {% endfor %}
-        </select>
-        <br>
-        <label for="status">Status:</label>
-        <select name="status" required>
-            <option value="pending" {% if ad_request.status == 'pending' %}selected{% endif %}>Pending</option>
-            <option value="accepted" {% if ad_request.status == 'accepted' %}selected{% endif %}>Accepted</option>
-            <option value="rejected" {% if ad_request.status == 'rejected' %}selected{% endif %}>Rejected</option>
-            <option value="negotiated" {% if ad_request.status == 'negotiated' %}selected{% endif %}>Negotiated</option>
-        </select>
-        <br>
-        <label for="details">Details:</label>
-        <textarea name="details" rows="4" cols="50">{{ ad_request.details }}</textarea>
-        <br>
-        <input type="submit" value="Update Ad Request">
-    </form>
-    <a href="{{ url_for('list_ad_requests') }}">Back to Ad Requests List</a>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="logo">
+                <h1>InfluConnect</h1>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="{{ url_for('sponsor_profile') }}" class="nav-link">
+                            <i class="fas fa-user-edit"></i> Edit Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('search_influencers') }}" class="nav-link">
+                            <i class="fas fa-search"></i> Find Influencers
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('campaigns_list') }}" class="nav-link">
+                            <i class="fas fa-bullhorn"></i> Campaigns
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('list_ad_requests') }}" class="nav-link active">
+                            <i class="fas fa-ad"></i> Ad Requests
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('logout') }}" class="nav-link">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <h1 class="welcome-text">Edit Ad Request</h1>
+                <a href="{{ url_for('list_ad_requests') }}" class="btn">
+                    <i class="fas fa-arrow-left"></i> Back to Ad Requests
+                </a>
+            </header>
+
+            <section class="form-container">
+                <form action="{{ url_for('edit_ad_request', id=ad_request.id) }}" method="POST">
+                    <div class="form-group">
+                        <label for="campaign_id">Campaign:</label>
+                        <input type="text" id="campaign_id" class="form-control" value="{{ ad_request.campaign.title }}" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="influencer_id">Influencer:</label>
+                        <select name="influencer_id" id="influencer_id" class="form-control" required>
+                            {% for influencer in influencers %}
+                            <option value="{{ influencer.id }}" {% if influencer.id == ad_request.influencer_id %}selected{% endif %}>{{ influencer.user.username }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="status">Status:</label>
+                        <select name="status" id="status" class="form-control" required>
+                            <option value="pending" {% if ad_request.status == 'pending' %}selected{% endif %}>Pending</option>
+                            <option value="accepted" {% if ad_request.status == 'accepted' %}selected{% endif %}>Accepted</option>
+                            <option value="rejected" {% if ad_request.status == 'rejected' %}selected{% endif %}>Rejected</option>
+                            <option value="negotiated" {% if ad_request.status == 'negotiated' %}selected{% endif %}>Negotiated</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="details">Details:</label>
+                        <textarea name="details" id="details" rows="4" class="form-control">{{ ad_request.details }}</textarea>
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-save"></i> Update Ad Request
+                    </button>
+                </form>
+            </section>
+        </main>
+    </div>
 </body>
 </html>
