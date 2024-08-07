@@ -216,7 +216,8 @@ def create_app():
         flash('Your application has been submitted!', 'success')
         return redirect(url_for('campaign_details', campaign_id=campaign_id))
 
-
+    @app.route('/create_campaign', methods=['GET', 'POST'])
+    @login_required
     @sponsor_required
     def create_campaign():
         if request.method == 'POST':
@@ -467,6 +468,7 @@ def create_app():
         return render_template('search_campaigns.html')
 
     # Influener Profile
+
     @app.route('/influencer/profile', methods=['GET', 'POST'])
     @login_required
     @influencer_required
