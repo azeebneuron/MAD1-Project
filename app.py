@@ -200,7 +200,7 @@ def create_app():
         campaigns = Campaign.query.filter_by(sponsor_id=current_user.id).all()
         return render_template('sponsor.html', campaigns=campaigns)
 
-    @app.route('/campaigns/create', methods=['GET', 'POST'])
+    # @app.route('/campaigns/create', methods=['GET', 'POST'])
 
     @app.route('/campaign/<int:campaign_id>')
     @login_required

@@ -199,7 +199,7 @@
                         <p><strong>Start Date:</strong> {{ campaign.start_date }}</p>
                         <p><strong>End Date:</strong> {{ campaign.end_date }}</p>
                         <!-- <p><strong>Campaign ID:</strong> {{ campaign.id }}</p> -->
-                        <!-- <a href="{{ url_for('campaign_details', campaign_id=campaign.id) }}" class="btn">View Details</a> -->
+                        <a href="{{ url_for('campaign_details', campaign_id=campaign.id) }}" class="btn">View Details</a>
                     </li>
                 {% endfor %}
                 </ul>
