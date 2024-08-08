@@ -3,36 +3,263 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>InfluConnect - Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a1a1a;
+            --secondary-color: #ff6600;
+            --text-color: #f4f4f4;
+            --bg-color: #121212;
+            --card-bg-color: #2a2a2a;
+            --hover-color: #ff8533;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+        }
+
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--primary-color);
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo h1 {
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+        }
+
+        .nav-menu {
+            list-style-type: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        .nav-link i {
+            margin-right: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            margin-left: 250px;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .welcome-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .btn {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: var(--hover-color);
+        }
+
+        .section-title {
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            color: var(--secondary-color);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background-color: var(--card-bg-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Admin Dashboard</h1>
-    
-    <h2>Statistics</h2>
-    <ul>
-        <li>Total Users: {{ total_users }}</li>
-        <li>Active Users: {{ active_users }}</li>
-        <li>Total Campaigns: {{ total_campaigns }}</li>
-        <li>Public Campaigns: {{ public_campaigns }}</li>
-        <li>Private Campaigns: {{ private_campaigns }}</li>
-        <li>Total Ad Requests: {{ total_ad_requests }}</li>
-        <li>Pending Ad Requests: {{ pending_ad_requests }}</li>
-        <li>Accepted Ad Requests: {{ accepted_ad_requests }}</li>
-        <li>Rejected Ad Requests: {{ rejected_ad_requests }}</li>
-        <li>Flagged Sponsors: {{ flagged_sponsors }}</li>
-        <li>Flagged Influencers: {{ flagged_influencers }}</li>
-    </ul>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="logo">
+                <h1>InfluConnect</h1>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="{{ url_for('admin_dashboard') }}" class="nav-link active">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('admin_users') }}" class="nav-link">
+                            <i class="fas fa-users"></i> Manage Users
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('admin_campaigns') }}" class="nav-link">
+                            <i class="fas fa-bullhorn"></i> Manage Campaigns
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('admin_ad_requests') }}" class="nav-link">
+                            <i class="fas fa-ad"></i> Manage Ad Requests
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('logout') }}" class="nav-link">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
 
-    <h2>Quick Links</h2>
-    <ul>
-        <li><a href="{{ url_for('admin_users') }}">Manage Users</a></li>
-        <li><a href="{{ url_for('admin_campaigns') }}">Manage Campaigns</a></li>
-        <li><a href="{{ url_for('admin_ad_requests') }}">Manage Ad Requests</a></li>
-    </ul>
+        <main class="main-content">
+            <header class="header">
+                <h1 class="welcome-text">Admin Dashboard</h1>
+            </header>
 
-    <form action="{{ url_for('logout') }}" method="get">
-        <button type="submit">Logout</button>
-    </form>
-    
+            <section>
+                <h2 class="section-title">Statistics</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">{{ total_users }}</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">{{ active_users }}</div>
+                        <div class="stat-label">Active Users</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">{{ total_campaigns }}</div>
+                        <div class="stat-label">Total Campaigns</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">{{ public_campaigns }}</div>
+                        <div class="stat-label">Public Campaigns</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">{{ private_campaigns }}</div>
+                        <div class="stat-label">Private Campaigns</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">{{ total_ad_requests }}</div>
+                        <div class="stat-label">Total Ad Requests</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">{{ pending_ad_requests }}</div>
+                        <div class="stat-label">Pending Ad Requests</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">{{ accepted_ad_requests }}</div>
+                        <div class="stat-label">Accepted Ad Requests</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">{{ rejected_ad_requests }}</div>
+                        <div class="stat-label">Rejected Ad Requests</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">{{ flagged_sponsors }}</div>
+                        <div class="stat-label">Flagged Sponsors</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">{{ flagged_influencers }}</div>
+                        <div class="stat-label">Flagged Influencers</div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">Don't Misuse your power</h2>
+                <p>As an admin, you have the power to manage users, campaigns, and ad requests. Use this power wisely!</p>
+            </section>
+        </main>
+    </div>
 </body>
 </html>

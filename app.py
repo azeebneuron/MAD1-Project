@@ -11,6 +11,9 @@ import click
 from extensions import db, login_manager
 from commands import init_app as init_commands
 from models import User, Sponsor, Influencer, Campaign, AdRequest
+from flask import send_file
+import matplotlib.pyplot as plt
+import io
 
 
 
@@ -582,6 +585,17 @@ def create_app():
     @admin_required
     def admin_user_delete(user_id):
         user = User.query.get_or_404(user_id)
+        
+        # Delete associated sponsor or influencer
+        if user.role == 'sponsor':
+            sponsor = Sponsor.query.filter_by(user_id=user.id).first()
+            if sponsor:
+                db.session.delete(sponsor)
+        elif user.role == 'influencer':
+            influencer = Influencer.query.filter_by(user_id=user.id).first()
+            if influencer:
+                db.session.delete(influencer)
+        
         db.session.delete(user)
         db.session.commit()
         flash('User deleted successfully', 'success')
@@ -621,9 +635,22 @@ def create_app():
     @admin_required
     def admin_campaign_delete(campaign_id):
         campaign = Campaign.query.get_or_404(campaign_id)
+        
+        # Delete associated ad requests
+        ad_requests = AdRequest.query.filter_by(campaign_id=campaign.id).all()
+        for ad_request in ad_requests:
+            db.session.delete(ad_request)
+        
+        # Delete the campaign
         db.session.delete(campaign)
-        db.session.commit()
-        flash('Campaign deleted successfully', 'success')
+        
+        try:
+            db.session.commit()
+            flash('Campaign and associated ad requests deleted successfully', 'success')
+        except Exception as e:
+            db.session.rollback()
+            flash(f'An error occurred while deleting the campaign: {str(e)}', 'error')
+        
         return redirect(url_for('admin_campaigns'))
 
     @app.route('/admin/ad_requests')

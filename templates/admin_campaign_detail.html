@@ -3,17 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campaign Detail</title>
+    <title>InfluConnect - Campaign Detail</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a1a1a;
+            --secondary-color: #ff6600;
+            --text-color: #f4f4f4;
+            --bg-color: #121212;
+            --card-bg-color: #2a2a2a;
+            --hover-color: #ff8533;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+        }
+
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--primary-color);
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo h1 {
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+        }
+
+        .nav-menu {
+            list-style-type: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        .nav-link i {
+            margin-right: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            margin-left: 250px;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .welcome-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .btn {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: var(--hover-color);
+        }
+
+        .campaign-detail {
+            background-color: var(--card-bg-color);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .campaign-detail h2 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .campaign-detail p {
+            margin-bottom: 0.5rem;
+        }
+
+        .campaign-detail strong {
+            color: var(--secondary-color);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Campaign Detail</h1>
-    <a href="{{ url_for('admin_campaigns') }}">Back to Campaigns</a>
-    <h2>{{ campaign.title }}</h2>
-    <p>ID: {{ campaign.id }}</p>
-    <p>Sponsor: {{ campaign.sponsor.username }}</p>
-    <p>Description: {{ campaign.description }}</p>
-    <p>Budget: ${{ campaign.budget }}</p>
-    <p>Status: {{ campaign.status }}</p>
-    <a href="{{ url_for('admin_campaign_edit', campaign_id=campaign.id) }}">Edit Campaign</a>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="logo">
+                <h1>InfluConnect</h1>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="{{ url_for('admin_dashboard') }}" class="nav-link">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('admin_users') }}" class="nav-link">
+                            <i class="fas fa-users"></i> Manage Users
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('admin_campaigns') }}" class="nav-link active">
+                            <i class="fas fa-bullhorn"></i> Manage Campaigns
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('admin_ad_requests') }}" class="nav-link">
+                            <i class="fas fa-ad"></i> Manage Ad Requests
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('logout') }}" class="nav-link">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <h1 class="welcome-text">Campaign Detail</h1>
+                <a href="{{ url_for('admin_campaigns') }}" class="btn">Back to Campaigns</a>
+            </header>
+
+            <section class="campaign-detail">
+                <h2>{{ campaign.title }}</h2>
+                <p><strong>ID:</strong> {{ campaign.id }}</p>
+                <p><strong>Sponsor:</strong> {{ campaign.sponsor.username }}</p>
+                <p><strong>Description:</strong> {{ campaign.description }}</p>
+                <p><strong>Budget:</strong> ${{ campaign.budget }}</p>
+                <p><strong>Status:</strong> {{ campaign.status }}</p>
+                <a href="{{ url_for('admin_campaign_edit', campaign_id=campaign.id) }}" class="btn">Edit Campaign</a>
+            </section>
+        </main>
+    </div>
 </body>
 </html>
