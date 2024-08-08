@@ -14,7 +14,8 @@ from models import User, Sponsor, Influencer, Campaign, AdRequest
 from flask import send_file
 import matplotlib.pyplot as plt
 import io
-
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import joinedload
 
 
 
@@ -76,13 +77,17 @@ def create_app():
                 new_influencer = Influencer(user_id=new_user.id)
                 db.session.add(new_influencer)
             elif role == 'sponsor':
-                new_sponsor = Sponsor(user_id=new_user.id)
+                new_sponsor = Sponsor(user_id=new_user.id, email=email)  # Add email here
                 db.session.add(new_sponsor)
 
-            db.session.commit()
-
-            flash('Account created successfully!', 'success')
-            return redirect(url_for('signin'))
+            try:
+                db.session.commit()
+                flash('Account created successfully!', 'success')
+                return redirect(url_for('signin'))
+            except IntegrityError:
+                db.session.rollback()
+                flash('An error occurred. Please try again.', 'danger')
+                return redirect(url_for('signup'))
 
         return render_template('signup.html')
 
@@ -311,25 +316,40 @@ def create_app():
             status = request.form.get('status')
             details = request.form.get('details')
 
+            # # Validate campaign
+            # campaign = Campaign.query.options(joinedload(Campaign.sponsor)).get(campaign_id)
+            # if not campaign:
+            #     flash('Invalid campaign selected.', 'error')
+            #     return redirect(url_for('create_ad_request'))
+            # if not campaign.sponsor:
+            #     flash('The selected campaign does not have an associated sponsor.', 'error')
+            #     return redirect(url_for('create_ad_request'))
+
             # Find the influencer by username
             influencer = Influencer.query.join(User).filter(User.username == influencer_username).first()
-
             if not influencer:
                 flash('Influencer not found. Please check the username and try again.', 'error')
                 return redirect(url_for('create_ad_request'))
 
+            # Create new ad request
             new_ad_request = AdRequest(
                 campaign_id=campaign_id,
                 influencer_id=influencer.id,
                 status=status,
                 details=details
             )
-            db.session.add(new_ad_request)
-            db.session.commit()
+            
+            try:
+                db.session.add(new_ad_request)
+                db.session.commit()
+                flash('Ad request created successfully!', 'success')
+                return redirect(url_for('list_ad_requests'))
+            except Exception as e:
+                db.session.rollback()
+                flash(f'An error occurred while creating the ad request: {str(e)}', 'error')
+                return redirect(url_for('create_ad_request'))
 
-            flash('Ad request created successfully!', 'success')
-            return redirect(url_for('list_ad_requests'))
-
+        # GET request
         campaigns = Campaign.query.filter_by(sponsor_id=current_user.id).all()
         return render_template('create_ad_request.html', campaigns=campaigns)
 
@@ -373,7 +393,19 @@ def create_app():
             flash('You are not registered as an influencer.', 'error')
             return redirect(url_for('home'))
         
-        ad_requests = AdRequest.query.filter_by(influencer_id=influencer.id).all()
+        ad_requests = AdRequest.query.options(
+            joinedload(AdRequest.campaign).joinedload(Campaign.sponsor)
+        ).filter_by(influencer_id=influencer.id).all()
+
+        # # Debugging
+        # for ad_request in ad_requests:
+        #     print(f"Campaign: {ad_request.campaign.title}")
+        #     print(f"Sponsor: {ad_request.campaign.sponsor.company_name}")
+        #     print(f"Sponsor Email: {ad_request.campaign.sponsor.email}")
+        #     print("---")
+
+
+
         return render_template('influencer_ad_requests.html', ad_requests=ad_requests, influencer=influencer)
 
     @app.route('/influencer/ad_request/<int:id>/action', methods=['POST'])
@@ -397,15 +429,9 @@ def create_app():
         elif action == 'reject':
             ad_request.status = 'rejected'
             flash('Ad request rejected successfully.', 'success')
-        elif action == 'negotiate':
-            new_terms = request.form.get('new_terms')
-            if new_terms:
-                ad_request.status = 'negotiated'
-                ad_request.negotiation_terms = new_terms
-                ad_request.communication_log += f"\n[{datetime.utcnow()}] Influencer negotiated: {new_terms}"
-                flash('Negotiation submitted successfully.', 'success')
-            else:
-                flash('Please provide terms for negotiation.', 'error')
+        else:
+            flash('Invalid action.', 'error')
+            return redirect(url_for('influencer_ad_requests'))
         
         ad_request.updated_at = datetime.utcnow()
         db.session.commit()

@@ -12,6 +12,10 @@ class User(db.Model, UserMixin):
     role = db.Column(db.String(50), nullable=False)  # admin, sponsor, influencer
     is_active = db.Column(db.Boolean, default=True)
 
+    sponsor = db.relationship('Sponsor', back_populates='user', uselist=False)
+    influencer = db.relationship('Influencer', back_populates='user', uselist=False)
+
+
     # profile_picture_url = db.Column(db.String(255))
     # cover_picture_url = db.Column(db.String(255))
     # created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -25,10 +29,15 @@ class Sponsor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     company_name = db.Column(db.String(120))
+    email = db.Column(db.String(120), nullable=False)  # Add this line
     industry = db.Column(db.String(120))
     budget = db.Column(db.Float)
     description = db.Column(db.Text)
     is_flagged = db.Column(db.Boolean, default=False)
+
+    user = db.relationship('User', back_populates='sponsor')
+
+
 
     # add bio
     # profile_picture_url = db.Column(db.String(255))
@@ -36,7 +45,7 @@ class Sponsor(db.Model):
     # created_at = db.Column(db.DateTime, default=datetime.utcnow)
     # updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    user = db.relationship('User', backref=db.backref('sponsors', lazy=True))
+    # user = db.relationship('User', backref=db.backref('sponsors', lazy=True))
 
     def __repr__(self):
         return f'<Sponsor {self.company_name}>'
@@ -55,7 +64,7 @@ class Influencer(db.Model):
     # created_at = db.Column(db.DateTime, default=datetime.utcnow)
     # updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    user = db.relationship('User', backref=db.backref('influencers', lazy=True))
+    user = db.relationship('User', back_populates='influencer')
 
     def __repr__(self):
         return f'<Influencer {self.id}>'
@@ -63,7 +72,7 @@ class Influencer(db.Model):
 
 class Campaign(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    sponsor_id = db.Column(db.Integer, db.ForeignKey('sponsor.id'), nullable=False)
+    sponsor_id = db.Column(db.Integer, db.ForeignKey('sponsor.id', ondelete='SET NULL'), nullable=True)
     title = db.Column(db.String(120), nullable=False)
     description = db.Column(db.Text)
     budget = db.Column(db.Float)
@@ -73,12 +82,13 @@ class Campaign(db.Model):
     end_date = db.Column(db.DateTime)
     is_public = db.Column(db.Boolean, default=True)
 
+    sponsor = db.relationship('Sponsor', backref=db.backref('campaigns', lazy=True, cascade='all, delete-orphan'))
+
+
 
     # goals = db.Column(db.Text)
     # created_at = db.Column(db.DateTime, default=datetime.utcnow)
     # updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-
-    sponsor = db.relationship('Sponsor', backref=db.backref('campaigns', lazy=True))
 
     def __repr__(self):
         return f'<Campaign {self.title}>'
@@ -86,8 +96,8 @@ class Campaign(db.Model):
 
 class AdRequest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    campaign_id = db.Column(db.Integer, db.ForeignKey('campaign.id'), nullable=False)
-    influencer_id = db.Column(db.Integer, db.ForeignKey('influencer.id'), nullable=False)
+    campaign_id = db.Column(db.Integer, db.ForeignKey('campaign.id', ondelete='CASCADE'), nullable=False)
+    influencer_id = db.Column(db.Integer, db.ForeignKey('influencer.id', ondelete='CASCADE'), nullable=False)
     status = db.Column(db.String(50), nullable=False)  # pending, accepted, rejected, negotiated
     details = db.Column(db.Text)
     negotiation_terms = db.Column(db.Text)
@@ -95,8 +105,9 @@ class AdRequest(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    campaign = db.relationship('Campaign', backref=db.backref('ad_requests', lazy=True))
-    influencer = db.relationship('Influencer', backref=db.backref('ad_requests', lazy=True))
+
+    campaign = db.relationship('Campaign', backref=db.backref('ad_requests', lazy=True, cascade='all, delete-orphan'))
+    influencer = db.relationship('Influencer', backref=db.backref('ad_requests', lazy=True, cascade='all, delete-orphan'))
 
     def __repr__(self):
         return f'<AdRequest {self.id}>'
