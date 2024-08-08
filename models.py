@@ -102,6 +102,7 @@ class AdRequest(db.Model):
     details = db.Column(db.Text)
     negotiation_terms = db.Column(db.Text)
     communication_log = db.Column(db.Text)
+    renegotiation_email = db.Column(db.String(120), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

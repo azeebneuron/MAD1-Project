@@ -288,8 +288,8 @@
                                             <input type="hidden" name="action" value="reject">
                                             <button type="submit" class="action-btn reject-btn">Reject</button>
                                         </form>
-                                        {% if ad_request.campaign and ad_request.campaign.sponsor %}
-                                            <button class="action-btn chat-btn" onclick="openChatModal('{{ ad_request.campaign.sponsor.email }}')">Chat</button>
+                                        {% if ad_request.renegotiation_email %}
+                                            <button class="action-btn chat-btn" onclick="openChatModal('{{ ad_request.renegotiation_email }}')">Chat</button>
                                         {% else %}
                                             <button class="action-btn chat-btn" disabled>Chat Unavailable</button>
                                         {% endif %}

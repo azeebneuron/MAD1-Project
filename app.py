@@ -315,15 +315,8 @@ def create_app():
             influencer_username = request.form.get('influencer_username')
             status = request.form.get('status')
             details = request.form.get('details')
+            renegotiation_email = request.form.get('renegotiation_email')
 
-            # # Validate campaign
-            # campaign = Campaign.query.options(joinedload(Campaign.sponsor)).get(campaign_id)
-            # if not campaign:
-            #     flash('Invalid campaign selected.', 'error')
-            #     return redirect(url_for('create_ad_request'))
-            # if not campaign.sponsor:
-            #     flash('The selected campaign does not have an associated sponsor.', 'error')
-            #     return redirect(url_for('create_ad_request'))
 
             # Find the influencer by username
             influencer = Influencer.query.join(User).filter(User.username == influencer_username).first()
@@ -336,7 +329,8 @@ def create_app():
                 campaign_id=campaign_id,
                 influencer_id=influencer.id,
                 status=status,
-                details=details
+                details=details,
+                renegotiation_email=renegotiation_email
             )
             
             try:
@@ -396,15 +390,6 @@ def create_app():
         ad_requests = AdRequest.query.options(
             joinedload(AdRequest.campaign).joinedload(Campaign.sponsor)
         ).filter_by(influencer_id=influencer.id).all()
-
-        # # Debugging
-        # for ad_request in ad_requests:
-        #     print(f"Campaign: {ad_request.campaign.title}")
-        #     print(f"Sponsor: {ad_request.campaign.sponsor.company_name}")
-        #     print(f"Sponsor Email: {ad_request.campaign.sponsor.email}")
-        #     print("---")
-
-
 
         return render_template('influencer_ad_requests.html', ad_requests=ad_requests, influencer=influencer)
 
