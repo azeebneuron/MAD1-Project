@@ -55,6 +55,7 @@ class Influencer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     name= db.Column(db.String(120))
+    contact_email= db.Column(db.String(120), nullable=False)
     category = db.Column(db.String(120))
     niche = db.Column(db.String(120))
     is_flagged = db.Column(db.Boolean, default=False)

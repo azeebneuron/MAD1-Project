@@ -229,10 +229,13 @@
                     <input type="text" id="name" name="name" value="{{ influencer.name or '' }}" class="form-control">
                 </div>
                 <div class="form-group">
+                    <label for="contact_email">Provide your Contact Email</label>
+                    <input type="text" id="contact_email" name="contact_email" value="{{ influencer.contact_email or '' }}" class="form-control">
+                </div>
+                <div class="form-group">
                     <label for="category">Category:</label>
                     <input type="text" id="category" name="category" value="{{ influencer.category or '' }}" class="form-control">
                 </div>
-
                 <div class="form-group">
                     <label for="niche">Niche:</label>
                     <input type="text" id="niche" name="niche" value="{{ influencer.niche or '' }}" class="form-control">

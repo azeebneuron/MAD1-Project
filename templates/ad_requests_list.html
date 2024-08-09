@@ -170,6 +170,45 @@
         .action-btn:hover {
             opacity: 0.8;
         }
+        .email-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--card-bg-color);
+            padding: 2rem;
+            border-radius: 10px;
+            z-index: 1000;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+        .email-popup h2 {
+            margin-bottom: 1rem;
+        }
+        .email-popup p {
+            margin-bottom: 1rem;
+        }
+        .email-popup .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        .chat-btn {
+            background-color: #3498db;
+        }
+
     </style>
 </head>
 <body>
@@ -244,6 +283,11 @@
                                         <i class="fas fa-trash-alt"></i> Delete
                                     </button>
                                 </form>
+                                {% if ad_request.status == 'accepted' %}
+                                <button class="action-btn chat-btn" onclick="showEmail('{{ ad_request.id }}', '{{ ad_request.influencer.contact_email }}')">
+                                    <i class="fas fa-envelope"></i> Chat
+                                </button>
+                                {% endif %}
                             </td>
                         </tr>
                         {% endfor %}
@@ -252,5 +296,27 @@
             </section>
         </main>
     </div>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="email-popup" id="emailPopup">
+        <span class="close-btn" onclick="closeEmailPopup()">&times;</span>
+        <h2>Influencer Contact</h2>
+        <p>Email: <span id="influencerEmail"></span></p>
+        <a href="#" id="emailLink" class="btn">Send Email</a>
+    </div>
+
+    <script>
+        function showEmail(adRequestId, email) {
+            document.getElementById('influencerEmail').textContent = email;
+            document.getElementById('emailLink').href = 'mailto:' + email;
+            document.getElementById('emailPopup').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        function closeEmailPopup() {
+            document.getElementById('emailPopup').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+    </script>
 </body>
 </html>

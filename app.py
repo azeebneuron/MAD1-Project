@@ -74,7 +74,7 @@ def create_app():
             db.session.flush()  # This will assign an id to new_user without committing the transaction
 
             if role == 'influencer':
-                new_influencer = Influencer(user_id=new_user.id)
+                new_influencer = Influencer(user_id=new_user.id, contact_email=email, name=username)
                 db.session.add(new_influencer)
             elif role == 'sponsor':
                 new_sponsor = Sponsor(user_id=new_user.id, email=email)  # Add email here
@@ -504,11 +504,12 @@ def create_app():
             return redirect(url_for('home'))
 
         if request.method == 'POST':
-            influencer.name = request.form['name']
-            influencer.category = request.form['category']
-            influencer.niche = request.form['niche']
-            influencer.reach = int(request.form['reach'])
-            influencer.bio = request.form['bio']
+            influencer.name = request.form.get('name', influencer.name)
+            influencer.contact_email = request.form.get('contact_email', influencer.contact_email)
+            influencer.category = request.form.get('category', influencer.category)
+            influencer.niche = request.form.get('niche', influencer.niche)
+            influencer.reach = int(request.form.get('reach', influencer.reach))
+            influencer.bio = request.form.get('bio', influencer.bio)
 
             db.session.commit()
             flash('Profile updated successfully!', 'success')
