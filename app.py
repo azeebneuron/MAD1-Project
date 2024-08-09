@@ -195,11 +195,6 @@ def create_app():
         print("Username:", username)
         return render_template('sponsor.html', username=username, campaigns=campaigns)
 
-    @app.route('/error')
-    def error():
-        return render_template('error.html')
-
-
 
     @app.route('/campaigns')
     @login_required
@@ -700,6 +695,34 @@ def create_app():
         db.session.commit()
         flash('Ad request deleted successfully', 'success')
         return redirect(url_for('admin_ad_requests'))
+    
+    # Error handling
+    
+    @app.errorhandler(404)
+    def page_not_found(e):
+        return render_template('funny_error.html', error_type='404 Not Found', error_message='The page you are looking for does not exist.'), 404
+
+    @app.errorhandler(500)
+    def internal_server_error(e):
+        return render_template('funny_error.html', error_type='500 Internal Server Error', error_message='Something went wrong on our end.'), 500
+
+    @app.errorhandler(TypeError)
+    def handle_type_error(e):
+        app.logger.error(f'TypeError: {str(e)}')
+        return render_template('funny_error.html', error_type='TypeError', error_message=str(e)), 400
+
+    @app.errorhandler(Exception)
+    def handle_exception(e):
+        error_type = type(e).__name__
+        error_message = str(e)
+        app.logger.error(f'Unhandled Exception: {error_type} - {error_message}')
+        return render_template('funny_error.html', error_type=error_type, error_message=error_message), 500
+
+    @app.route('/oops')
+    def oops():
+        error_type = request.args.get('error_type', 'UnknownError')
+        error_message = request.args.get('error_message', 'An unexpected error occurred')
+        return render_template('funny_error.html', error_type=error_type, error_message=error_message), 
 
     init_commands(app)
     return app

@@ -256,8 +256,8 @@
             <nav>
                 <ul class="nav-menu">
                     <li class="nav-item">
-                        <a href="{{ url_for('influencer_profile') }}" class="nav-link">
-                            <i class="fas fa-user-edit"></i> Edit Profile
+                        <a href="{{ url_for('influencer') }}" class="nav-link active">
+                            <i class="fas fa-home"></i> Dashboard
                         </a>
                     </li>
                     <li class="nav-item">
@@ -268,6 +268,11 @@
                     <li class="nav-item">
                         <a href="{{ url_for('influencer_ad_requests') }}" class="nav-link">
                             <i class="fas fa-ad"></i> View Ad Requests
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('influencer_profile') }}" class="nav-link">
+                            <i class="fas fa-user-edit"></i> Update Profile
                         </a>
                     </li>
                     <li class="nav-item">

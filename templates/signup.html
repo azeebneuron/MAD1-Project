@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - InfluConnect</title>
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600;700&family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <style>
         :root {
             --primary-color: #1a1a1a;
@@ -12,6 +13,7 @@
             --text-color: #f4f4f4;
             --bg-color: #121212;
             --card-bg-color: #2a2a2a;
+            --hover-color: #ff8533;
         }
 
         * {
@@ -21,7 +23,7 @@
         }
 
         body {
-            font-family: 'Raleway', sans-serif;
+            font-family: 'Poppins', sans-serif;
             line-height: 1.6;
             color: var(--text-color);
             background-color: var(--bg-color);
@@ -29,156 +31,160 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, rgba(26,26,26,0.9) 0%, rgba(255,102,0,0.9) 100%);
-            padding: 2rem 0;
         }
 
-        .container {
+        .signup-container {
+            display: flex;
             background-color: var(--card-bg-color);
-            padding: 2.5rem;
-            border-radius: 10px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-            width: 100%;
-            max-width: 400px;
-            animation: fadeIn 0.5s ease-out;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 800px; 
+            width: 80%; 
+            height: 600px; 
+        }
+
+        .signup-image {
+            flex: 1;
+            background-image: url('../static/signup.jpeg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .signup-content {
+            flex: 1;
+            padding: 1.5rem; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            /* overflow-y: auto;  */
         }
 
         .logo {
-            text-align: center;
-            margin-bottom: 1.5rem;
-            font-family: 'Poppins', sans-serif;
-            font-size: 2rem;
+            font-weight: 700;
             color: var(--secondary-color);
+            font-size: 1.8rem; 
+            margin-bottom: 0.5rem; 
         }
 
         h2 {
-            font-family: 'Poppins', sans-serif;
-            color: var(--secondary-color);
-            text-align: center;
-            margin-bottom: 1rem;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
+            margin-bottom: 0.3rem;
         }
 
         .intro-text {
-            text-align: center;
-            margin-bottom: 1.5rem;
-            color: #bbb;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
+            margin-bottom: 1rem;
+            color: #ccc;
+            font-size: 0.9rem;
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 0.8rem;
         }
 
         label {
             display: block;
-            margin-bottom: 0.5rem;
-            color: #bbb;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
         }
 
         input, select {
             width: 100%;
-            padding: 0.8rem;
-            border: none;
+            padding: 0.6rem;
+            font-size: 0.9rem;
+            border: 1px solid #444;
             border-radius: 5px;
-            background-color: var(--primary-color);
+            background-color: #333;
             color: var(--text-color);
-            font-family: 'Raleway', sans-serif;
-        }
-
-        input::placeholder {
-            color: #888;
         }
 
         select {
             appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23888' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23ffffff' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 1rem center;
-            padding-right: 2.5rem;
-        }
-
-        select option {
-            background-color: var(--primary-color);
-            color: var(--text-color);
+            background-position: calc(100% - 1rem) center;
         }
 
         button {
             background-color: var(--secondary-color);
             color: var(--primary-color);
-            padding: 0.8rem;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-family: 'Raleway', sans-serif;
             font-weight: 600;
             transition: all 0.3s ease;
+            width: 100%;
+            padding: 0.6rem 1.2rem; 
+            margin-top: 0.8rem; 
+            font-size: 0.9rem; 
         }
 
         button:hover {
-            background-color: #ff8533;
+            background-color: var(--hover-color);
         }
 
         .signin-link {
+            margin-top: 0.8rem;
             text-align: center;
-            margin-top: 1.5rem;
+            font-size: 0.9rem;
         }
 
-        a {
+        .signin-link a {
             color: var(--secondary-color);
             text-decoration: none;
-            transition: color 0.3s ease;
         }
 
-        a:hover {
-            color: #ff8533;
+        .signin-link a:hover {
+            text-decoration: underline;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
+        @media (max-width: 768px) {
+            .signup-container {
+                flex-direction: column;
+                width: 90%; /* Increased from 80% for better mobile view */
+                height: auto; /* Allow height to adjust on mobile */
+                max-height: 90vh; /* Limit maximum height on mobile */
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+
+            .signup-image {
+                height: 150px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Join InfluConnect</h2>
-        <p class="intro-text">Create an account to start connecting with brands and influencers.</p>
-        <form action="/signup" method="post">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" placeholder="Choose a username" required>
+    <div class="signup-container">
+        <div class="signup-image"></div>
+        <div class="signup-content">
+            <div class="logo">InfluConnect</div>
+            <h2>Join InfluConnect</h2>
+            <p class="intro-text">Create an account to start connecting with brands and influencers.</p>
+            <form action="/signup" method="post">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Choose a username" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Create a password" required>
+                </div>
+                <div class="form-group">
+                    <label for="user-type">I am a</label>
+                    <select id="user-type" name="user-type" required>
+                        <option value="">Select User Type</option>
+                        <option value="influencer">Influencer</option>
+                        <option value="sponsor">Sponsor</option>
+                    </select>
+                </div>
+                <button type="submit">Sign Up</button>
+            </form>
+            <div class="signin-link">
+                <a href="{{ url_for('signin') }}">Already have an account? Sign In</a>
             </div>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="Enter your email" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Create a password" required>
-            </div>
-            <div class="form-group">
-                <label for="user-type">I am a</label>
-                <select id="user-type" name="user-type" required>
-                    <option value="">Select User Type</option>
-                    <option value="influencer">Influencer</option>
-                    <option value="sponsor">Sponsor</option>
-                </select>
-            </div>
-            <button type="submit">Sign Up</button>
-        </form>
-        <div class="signin-link">
-            <a href="{{ url_for('signin') }}">Already have an account? Sign In</a>
         </div>
     </div>
 </body>

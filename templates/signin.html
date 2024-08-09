@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In - InfluConnect</title>
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600;700&family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <style>
         :root {
             --primary-color: #1a1a1a;
@@ -12,6 +13,7 @@
             --text-color: #f4f4f4;
             --bg-color: #121212;
             --card-bg-color: #2a2a2a;
+            --hover-color: #ff8533;
         }
 
         * {
@@ -21,140 +23,140 @@
         }
 
         body {
-            font-family: 'Raleway', sans-serif;
+            font-family: 'Poppins', sans-serif;
             line-height: 1.6;
             color: var(--text-color);
             background-color: var(--bg-color);
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, rgba(26,26,26,0.9) 0%, rgba(255,102,0,0.9) 100%);
-            padding: 2rem 0;
+            height: 100vh;
         }
 
-        .container {
+        .signin-container {
+            display: flex;
             background-color: var(--card-bg-color);
-            padding: 2.5rem;
-            border-radius: 10px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-            width: 100%;
-            max-width: 400px;
-            animation: fadeIn 0.5s ease-out;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            width: 90%;
+        }
+
+        .signin-image {
+            flex: 1;
+            background-image: url('../static/signin.jpeg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .signin-content {
+            flex: 1;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .logo {
-            text-align: center;
-            margin-bottom: 1.5rem;
-            font-family: 'Poppins', sans-serif;
             font-size: 2rem;
+            font-weight: 700;
             color: var(--secondary-color);
+            margin-bottom: 1rem;
         }
 
         h2 {
-            font-family: 'Poppins', sans-serif;
-            color: var(--secondary-color);
-            text-align: center;
-            margin-bottom: 1rem;
             font-size: 1.8rem;
+            margin-bottom: 0.5rem;
         }
 
         .intro-text {
-            text-align: center;
             margin-bottom: 1.5rem;
-            color: #bbb;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
+            color: #ccc;
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         label {
             display: block;
             margin-bottom: 0.5rem;
-            color: #bbb;
         }
 
         input {
             width: 100%;
-            padding: 0.8rem;
-            border: none;
+            padding: 0.75rem;
+            border: 1px solid #444;
             border-radius: 5px;
-            background-color: var(--primary-color);
+            background-color: #333;
             color: var(--text-color);
-            font-family: 'Raleway', sans-serif;
-        }
-
-        input::placeholder {
-            color: #888;
         }
 
         button {
             background-color: var(--secondary-color);
             color: var(--primary-color);
-            padding: 0.8rem;
+            padding: 0.75rem 1.5rem;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-family: 'Raleway', sans-serif;
             font-weight: 600;
             transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
         }
 
         button:hover {
-            background-color: #ff8533;
+            background-color: var(--hover-color);
         }
 
         .signup-link {
+            margin-top: 1rem;
             text-align: center;
-            margin-top: 1.5rem;
         }
 
-        a {
+        .signup-link a {
             color: var(--secondary-color);
             text-decoration: none;
-            transition: color 0.3s ease;
         }
 
-        a:hover {
-            color: #ff8533;
+        .signup-link a:hover {
+            text-decoration: underline;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
+        @media (max-width: 768px) {
+            .signin-container {
+                flex-direction: column;
+                width: 95%;
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+
+            .signin-image {
+                height: 200px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo">InfluConnect</div>
-        <h2>Helloo Hooman</h2>
-        <p class="intro-text">Sign in to access your account and connect with amazing opportunities.</p>
-        <form action="/signin" method="post">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" placeholder="Enter your username" required>
+    <div class="signin-container">
+        <div class="signin-image"></div>
+        <div class="signin-content">
+            <div class="logo">InfluConnect</div>
+            <h2>Hello Human</h2>
+            <p class="intro-text">Sign in to access your account and connect with amazing opportunities.</p>
+            <form action="/signin" method="post">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit">Sign In</button>
+            </form>
+            <div class="signup-link">
+                <a href="{{ url_for('signup') }}">New to InfluConnect? Create an account</a>
             </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" required>
-            </div>
-            <button type="submit">Sign In</button>
-        </form>
-        <div class="signup-link">
-            <a href="{{ url_for('signup') }}">New to InfluConnect? Create an account</a>
         </div>
     </div>
 </body>

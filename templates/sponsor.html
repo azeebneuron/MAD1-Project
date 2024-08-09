@@ -218,7 +218,7 @@
 
         <main class="main-content">
             <header class="header">
-                <h1 class="welcome-text">Welcome, {{username|default('Guest', true)}}!</h1>
+                <h1 class="welcome-text">Welcome, {{ current_user.username }}!</h1>
                 <a href="{{ url_for('create_campaign') }}" class="btn">
                     <i class="fas fa-plus"></i> Create New Campaign
                 </a>

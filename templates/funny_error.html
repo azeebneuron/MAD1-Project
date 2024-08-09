@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oops! - InfluConnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a1a1a;
+            --secondary-color: #ff6600;
+            --text-color: #f4f4f4;
+            --bg-color: #121212;
+            --card-bg-color: #2a2a2a;
+            --hover-color: #ff8533;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .error-container {
+            display: flex;
+            background-color: var(--card-bg-color);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            width: 90%;
+        }
+
+        .error-image-container {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .error-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .error-content {
+            flex: 1;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .error-title {
+            color: var(--secondary-color);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .error-message {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .error-details {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            align-self: flex-start;
+        }
+
+        .btn:hover {
+            background-color: var(--hover-color);
+        }
+
+        @media (max-width: 768px) {
+            .error-container {
+                flex-direction: column;
+                width: 95%;
+            }
+
+            .error-image-container {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-image-container">
+            <img src="../static/error.png" alt="Funny error gif" class="error-image">
+        </div>
+        <div class="error-content">
+            <h1 class="error-title">Oops! Something went wrong</h1>
+            <p class="error-message">Looks like our influencers influenced the code a bit too much!</p>
+            <div class="error-details">
+                <p><strong>Error Type:</strong> {{ error_type }}</p>
+                <p><strong>Error Message:</strong> {{ error_message }}</p>
+            </div>
+            <button onclick="goBack()" class="btn">
+                <i class="fas fa-chevron-left"></i> Back to Safety
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>
