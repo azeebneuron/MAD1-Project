@@ -54,6 +54,7 @@ class Sponsor(db.Model):
 class Influencer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    name= db.Column(db.String(120))
     category = db.Column(db.String(120))
     niche = db.Column(db.String(120))
     is_flagged = db.Column(db.Boolean, default=False)
@@ -74,6 +75,7 @@ class Campaign(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sponsor_id = db.Column(db.Integer, db.ForeignKey('sponsor.id', ondelete='SET NULL'), nullable=True)
     title = db.Column(db.String(120), nullable=False)
+    company_name= db.Column(db.String(120), nullable=False)
     description = db.Column(db.Text)
     budget = db.Column(db.Float)
     category = db.Column(db.String(120))
@@ -103,6 +105,7 @@ class AdRequest(db.Model):
     negotiation_terms = db.Column(db.Text)
     communication_log = db.Column(db.Text)
     renegotiation_email = db.Column(db.String(120), nullable=False)
+    company_name = db.Column(db.String(120), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

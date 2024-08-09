@@ -280,7 +280,7 @@
                         {% for ad_request in ad_requests %}
                         <tr>
                             <td>{{ ad_request.campaign.title if ad_request.campaign else 'N/A' }}</td>
-                            <td>{{ ad_request.campaign.sponsor.company_name if ad_request.campaign and ad_request.campaign.sponsor else 'N/A' }}</td>
+                            <td>{{ ad_request.company_name }}</td>
                             <td>{{ ad_request.status }}</td>
                             <td>{{ ad_request.details }}</td>
                             <td>

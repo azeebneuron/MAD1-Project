@@ -220,7 +220,6 @@
 <body>
     <div class="dashboard">
         <aside class="sidebar">
-            <!-- Include the same sidebar from sponsor.html -->
             <div class="logo">
                 <h1>InfluConnect</h1>
             </div>
@@ -253,7 +252,6 @@
                     </li>
                 </ul>
             </nav>
-            <!-- ... -->
         </aside>
 
         <main class="main-content">
@@ -270,8 +268,7 @@
                     <div class="influencer-grid">
                     {% for influencer in influencers %}
                         <div class="influencer-card">
-                            <h3 class="influencer-name">{{ influencer.user.username }}</h3>
-                            <p class="influencer-info">Category: {{ influencer.category }}</p>
+                            <h3 class="influencer-name">{{ influencer.name }}</h3>                            <p class="influencer-info">Category: {{ influencer.category }}</p>
                             <p class="influencer-info">Niche: {{ influencer.niche }}</p>
                             <p class="influencer-info">Reach: {{ influencer.reach }}</p>
                             <p class="influencer-info">Bio: {{ influencer.bio|truncate(100) }}</p>
@@ -291,7 +288,7 @@
                         <p>No influencers found matching your criteria.</p>
                     </div>
                 {% endif %}
-            </section>
+            </section>  
         </main>
     </div>
 </body>

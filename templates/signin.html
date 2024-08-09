@@ -123,6 +123,30 @@
         .signup-link a:hover {
             text-decoration: underline;
         }
+        .flash-messages {
+            list-style-type: none;
+            padding: 1rem;
+            background-color: var(--card-bg-color);
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .flash-messages li {
+            padding: 0.5rem;
+            border-radius: 3px;
+        }
+
+        .flash-messages .success {
+            background-color: #28a745;
+        }
+
+        .flash-messages .error {
+            background-color: #dc3545;
+        }
+
+        .flash-messages .info {
+            background-color: #17a2b8;
+        }
 
         @media (max-width: 768px) {
             .signin-container {
@@ -137,6 +161,7 @@
     </style>
 </head>
 <body>
+
     <div class="signin-container">
         <div class="signin-image"></div>
         <div class="signin-content">

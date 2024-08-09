@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <style>
-        /* Include the same CSS from sponsor.html here */
         :root {
             --primary-color: #1a1a1a;
             --secondary-color: #ff6600;
@@ -178,7 +177,6 @@
                 margin-left: 0;
             }
         }
-        /* ... */
 
         .search-form {
             background-color: var(--card-bg-color);
@@ -275,7 +273,7 @@
                 <form action="{{ url_for('search_influencers') }}" method="post" class="search-form">
                     <div class="form-group">
                         <label for="search_query">Search</label>
-                        <input type="text" id="search_query" name="search_query" class="form-control" placeholder="Search by name, category, or niche">
+                        <input type="text" id="search_query" name="search_query" class="form-control" placeholder="Search by name, category, or niche" required>
                     </div>
                     <div class="form-group">
                         <label for="category">Category</label>
@@ -290,7 +288,7 @@
                     </div>
                     <div class="form-group">
                         <label for="min_reach">Minimum Reach</label>
-                        <input type="number" id="min_reach" name="min_reach" class="form-control" placeholder="Minimum reach">
+                        <input type="number" id="min_reach" name="min_reach" class="form-control" placeholder="Minimum reach" required>
                     </div>
                     <button type="submit" class="search-btn">
                         <i class="fas fa-search"></i> Search

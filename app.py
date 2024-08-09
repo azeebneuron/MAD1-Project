@@ -231,6 +231,7 @@ def create_app():
                 budget=float(request.form['budget']) if request.form['budget'] else None,
                 category=request.form['category'],
                 status=request.form['status'],
+                company_name=request.form['company_name'],
                 start_date=datetime.strptime(request.form['start_date'], '%Y-%m-%d') if request.form['start_date'] else None,
                 end_date=datetime.strptime(request.form['end_date'], '%Y-%m-%d') if request.form['end_date'] else None
             )
@@ -311,6 +312,7 @@ def create_app():
             status = request.form.get('status')
             details = request.form.get('details')
             renegotiation_email = request.form.get('renegotiation_email')
+            company_name = request.form.get('company_name')
 
 
             # Find the influencer by username
@@ -325,7 +327,8 @@ def create_app():
                 influencer_id=influencer.id,
                 status=status,
                 details=details,
-                renegotiation_email=renegotiation_email
+                renegotiation_email=renegotiation_email,
+                company_name=company_name
             )
             
             try:
@@ -428,21 +431,34 @@ def create_app():
             category = request.form.get('category', '')
             min_reach = request.form.get('min_reach', 0, type=int)
 
-            influencers = Influencer.query.join(User).filter(
-                or_(
-                    User.username.ilike(f'%{search_query}%'),
-                    Influencer.category.ilike(f'%{search_query}%'),
-                    Influencer.niche.ilike(f'%{search_query}%')
+            # Start with a base query
+            query = Influencer.query
+
+            # Apply search filter if a search query is provided
+            if search_query:
+                query = query.filter(
+                    or_(
+                        Influencer.name.ilike(f'%{search_query}%'),
+                        Influencer.category.ilike(f'%{search_query}%'),
+                        Influencer.niche.ilike(f'%{search_query}%')
+                    )
                 )
-            )
 
+            # Apply category filter if a category is selected
             if category:
-                influencers = influencers.filter(Influencer.category == category)
-            
-            if min_reach:
-                influencers = influencers.filter(Influencer.reach >= min_reach)
+                query = query.filter(Influencer.category == category)
 
-            influencers = influencers.all()
+            # Apply minimum reach filter if provided
+            if min_reach:
+                query = query.filter(Influencer.reach >= min_reach)
+
+            # Execute the query
+            influencers = query.all()
+
+            print(f"Number of influencers found: {len(influencers)}")
+            for inf in influencers:
+                print(f"Influencer: {inf.name}, Category: {inf.category}, Reach: {inf.reach}")
+
             return render_template('search_influencers_results.html', influencers=influencers)
 
         return render_template('search_influencers.html')
@@ -488,6 +504,7 @@ def create_app():
             return redirect(url_for('home'))
 
         if request.method == 'POST':
+            influencer.name = request.form['name']
             influencer.category = request.form['category']
             influencer.niche = request.form['niche']
             influencer.reach = int(request.form['reach'])
@@ -697,7 +714,7 @@ def create_app():
         return redirect(url_for('admin_ad_requests'))
     
     # Error handling
-    
+
     @app.errorhandler(404)
     def page_not_found(e):
         return render_template('funny_error.html', error_type='404 Not Found', error_message='The page you are looking for does not exist.'), 404
