@@ -10,6 +10,9 @@ flask create-admin
 use above command to create admin
 '''
 
+# The username is admin
+# The password is secure_password, SECURITYYY IS MY FIRST PRIORITY
+
 @click.command('create-admin')
 @with_appcontext
 def create_admin_command():
@@ -30,16 +33,3 @@ def create_admin_command():
 def init_app(app):
     app.cli.add_command(create_admin_command)
 
-'''
-
-from models import db, User
-from app import app
-
-with app.app_context():
-    users = User.query.all()
-    for user in users:
-        print(f"ID: {user.id}, Username: {user.username}, Email: {user.email}, Role: {user.role}")
-
--- to see all users
-
-'''

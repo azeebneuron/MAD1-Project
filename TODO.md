@@ -1,3 +1,0 @@
-- / routes to the current user logged in 
-    - caching
-- Calendar, block from choosing a previous start date

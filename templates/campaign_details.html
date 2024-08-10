@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campaign Details - InfluConnect</title>
+    <title>Campaign Details - The webAPP</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <style>
@@ -139,19 +139,51 @@
             margin-top: 1rem;
             line-height: 1.6;
         }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--card-bg-color);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+
+        .popup-content {
+            text-align: center;
+            color: var(--text-color);
+        }
+
+        .close-popup {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <div class="dashboard">
         <aside class="sidebar">
             <div class="logo">
-                <h1>InfluConnect</h1>
+                <h1>The webAPP</h1>
             </div>
             <nav>
                 <ul class="nav-menu">
                     <li class="nav-item">
+                        <a href="{{ url_for('influencer') }}" class="nav-link">
+                            <i class="fas fa-home"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="{{ url_for('influencer_profile') }}" class="nav-link">
-                            <i class="fas fa-user-edit"></i> Edit Profile
+                            <i class="fas fa-user-edit"></i> Create Profile
                         </a>
                     </li>
                     <li class="nav-item">
@@ -195,12 +227,30 @@
                     <p>{{ campaign.description }}</p>
                 </div>
                 {% if current_user.role == 'influencer' %}
-                <a href="{{ url_for('apply_campaign', campaign_id=campaign.id) }}" class="btn" style="margin-top: 1rem;">
+                <button id="applyButton" class="btn" style="margin-top: 1rem;">
                     Apply for Campaign
-                </a>
+                </button>
                 {% endif %}
             </section>
         </main>
     </div>
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <h2>Coming Soon</h2>
+            <button class="close-popup" onclick="closePopup()">Close</button>
+        </div>
+    </div>
+    <script>
+        const applyButton = document.getElementById('applyButton');
+        const popup = document.getElementById('popup');
+
+        applyButton.addEventListener('click', function() {
+            popup.style.display = 'block';
+        });
+
+        function closePopup() {
+            popup.style.display = 'none';
+        }
+    </script>
 </body>
 </html>
