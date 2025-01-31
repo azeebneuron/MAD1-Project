@@ -51,7 +51,7 @@
 
         .logo h1 {
             color: var(--secondary-color);
-            font-size: 1.5rem;
+            font-size: 1.3rem;
         }
 
         .nav-menu {
@@ -251,7 +251,7 @@
     <div class="dashboard">
         <aside class="sidebar">
             <div class="logo">
-                <h1>The webAPP</h1>
+                <h1>Influencer's Action</h1>
             </div>
             <nav>
                 <ul class="nav-menu">
@@ -295,7 +295,7 @@
                     {% for campaign in active_campaigns %}
                     <div class="campaign-card">
                         <h3 class="campaign-title">{{ campaign.title }}</h3>
-                        <p class="campaign-company">{{ campaign.sponsor.company_name }}</p>
+                        <p class="campaign-company">{{ campaign.company_name }}</p>
                         <p class="campaign-details"><strong>Category:</strong> {{ campaign.category }}</p>
                         <p class="campaign-details"><strong>Budget:</strong> ${{ campaign.budget }}</p>
                         <p class="campaign-details"><strong>Description:</strong> {{ campaign.description[:100] }}{% if campaign.description|length > 100 %}...{% endif %}</p>

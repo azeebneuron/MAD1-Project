@@ -14,7 +14,6 @@ from extensions import db, login_manager
 from commands import init_app as init_commands
 from models import User, Sponsor, Influencer, Campaign, AdRequest
 from flask import send_file
-import matplotlib.pyplot as plt
 import io
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import joinedload
@@ -233,7 +232,7 @@ def create_app():
             return redirect(url_for('home'))
 
         # Fetch active campaigns
-        active_campaigns = Campaign.query.filter_by(status='active', is_public=True).order_by(Campaign.start_date.desc()).limit(6).all()
+        active_campaigns = Campaign.query.filter_by(status='active', is_public=True).order_by(Campaign.start_date.desc()).limit(10).all()
         
         return render_template('influencer.html', current_user=current_user, active_campaigns=active_campaigns)
 
