@@ -2,43 +2,6 @@
 
 **InfluConnect** is a comprehensive web application designed to connect sponsors with influencers, streamlining the process of creating and managing influencer marketing campaigns. This project achieved a perfect score of **100/100** in the college evaluation and was awarded the **Best Capstone Project** badge.  
 
----
-
-## Features  
-
-- **User Authentication**: Secure login and role-based access (admin, sponsor, influencer).  
-- **Campaign Management**: Sponsors can create, manage, and track campaigns.  
-- **Influencer Search**: Sponsors can search for influencers based on niche, category, and reach.  
-- **Ad Requests**: Influencers can respond to sponsor ad requests with acceptance, rejection, or negotiation.  
-- **Admin Dashboard**: For managing the platform, including user roles and flagged accounts.  
-- **User Profiles**: Detailed profiles for both sponsors and influencers.  
-
----
-
-## Tech Stack  
-
-**Frontend**:  
-- **HTML**: Structuring web pages.  
-- **CSS**: Styling for responsive and user-friendly design.  
-
-**Backend**:  
-- **Python**: Core backend logic.  
-- **Flask**: Web framework for routing and handling requests.  
-- **Flask-SQLAlchemy**: ORM for database interactions.  
-- **Jinja2**: Dynamic HTML rendering.  
-- **SQLite**: Database engine for storing user, sponsor, influencer, and campaign data.  
-
----
-
-## Screenshots  
-
-### **Project Achievement: 100/100**  
-This project not only met but exceeded expectations, earning a perfect score in the college evaluation. The **Best Capstone Project** badge is a testament to the hard work, innovation, and dedication put into building InfluConnect.  
-
-![Best Capstone](samples/BestCapstone.png)  
-
----
-
 ### **Home Page: Your Gateway to Influencer Marketing**  
 The home page of InfluConnect welcomes users with a clean and intuitive design. The hero section highlights the platform's core features, making it easy for sponsors and influencers to understand the value of the platform at a glance.  
 
@@ -86,6 +49,40 @@ The Ad Requests feature allows sponsors to send collaboration requests to influe
 Sponsors can easily manage their campaigns through the Campaign Management interface. From creating new campaigns to tracking their progress, everything is designed for maximum efficiency.  
 
 ![ManageCampaign](samples/manage_campaigns.png)  
+
+---
+
+
+## Features  
+
+- **User Authentication**: Secure login and role-based access (admin, sponsor, influencer).  
+- **Campaign Management**: Sponsors can create, manage, and track campaigns.  
+- **Influencer Search**: Sponsors can search for influencers based on niche, category, and reach.  
+- **Ad Requests**: Influencers can respond to sponsor ad requests with acceptance, rejection, or negotiation.  
+- **Admin Dashboard**: For managing the platform, including user roles and flagged accounts.  
+- **User Profiles**: Detailed profiles for both sponsors and influencers.  
+
+---
+
+## Tech Stack  
+
+**Frontend**:  
+- **HTML**: Structuring web pages.  
+- **CSS**: Styling for responsive and user-friendly design.  
+
+**Backend**:  
+- **Python**: Core backend logic.  
+- **Flask**: Web framework for routing and handling requests.  
+- **Flask-SQLAlchemy**: ORM for database interactions.  
+- **Jinja2**: Dynamic HTML rendering.  
+- **SQLite**: Database engine for storing user, sponsor, influencer, and campaign data.  
+
+---
+
+### **Project Achievement: 100/100**  
+This project not only met but exceeded expectations, earning a perfect score in the college evaluation. The **Best Capstone Project** badge is a testament to the hard work, innovation, and dedication put into building InfluConnect.  
+
+![Best Capstone](samples/BestCapstone.png)  
 
 ---
 
