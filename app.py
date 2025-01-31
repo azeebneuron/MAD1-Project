@@ -73,7 +73,7 @@ def create_app():
             # Get the form data
 
             username = request.form['username']
-            password = generate_password_hash(request.form['password'], method='sha256')
+            password = generate_password_hash(request.form['password'])
             email = request.form['email']
             role = request.form['user-type']
             
